@@ -1,0 +1,57 @@
+{
+    "app-id": "com.github.rafostar.Clapper",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "42",
+    "sdk": "org.gnome.Sdk",
+    "command": "com.github.rafostar.Clapper",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=fallback-x11",
+        "--socket=wayland",
+        "--device=dri",
+        "--socket=pulseaudio",
+        "--share=network",
+        "--device=all",
+        "--filesystem=xdg-run/pipewire-0:ro",
+        "--filesystem=xdg-videos",
+        "--filesystem=xdg-run/gvfsd",
+        "--own-name=org.mpris.MediaPlayer2.Clapper",
+        "--talk-name=org.gtk.vfs.*",
+        "--talk-name=org.gnome.Shell",
+        "--env=GST_PLUGIN_SYSTEM_PATH=/app/lib/gstreamer-1.0"
+    ],
+    "modules": [
+        "flathub/shared-modules/gudev/gudev.json",
+        "flathub/lib/libsass.json",
+        "flathub/lib/sassc.json",
+        "flathub/lib/liba52.json",
+        "flathub/lib/libmpeg2.json",
+        "flathub/lib/libdv.json",
+        "flathub/lib/libdvdcss.json",
+        "flathub/lib/libdvdread.json",
+        "flathub/lib/libdvdnav.json",
+        "flathub/lib/libass.json",
+        "flathub/lib/ffmpeg.json",
+        "flathub/lib/uchardet.json",
+        "flathub/gstreamer-1.0/gstreamer.json",
+        "flathub/lib/gtk4.json",
+        "flathub/lib/libadwaita.json",
+        "testing/gtuber.json",
+        {
+            "name": "clapper",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dc_args=\"-DHAVE_GST_PATCHES=1\""
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "../../."
+                }
+            ]
+        }
+    ],
+    "cleanup-commands": [
+        "ln -s /lib/$FLATPAK_ARCH-linux-*/gstreamer-1.0/libgstpipewire.so /app/lib/gstreamer-1.0/"
+    ]
+}

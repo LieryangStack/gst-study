@@ -1,0 +1,42 @@
+option('player',
+  type: 'boolean',
+  value: true,
+  description: 'Build Clapper player'
+)
+option('lib',
+  type: 'boolean',
+  value: true,
+  description: 'Build GstClapper lib'
+)
+option('gst-plugin',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build GStreamer plugin (includes GTK video sink element)'
+)
+
+option('glimporter',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build GL memory importer for clappersink'
+)
+option('gluploader',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build GL uploader for clappersink'
+)
+option('rawimporter',
+  type: 'feature',
+  value: 'auto',
+  description: 'Build RAW system memory importer for clappersink'
+)
+
+option('devel-checks',
+  type: 'boolean',
+  value: false,
+  description: 'GStreamer GLib checks and asserts such as API guards (disable for stable releases)'
+)
+option('deprecated-glib-api',
+  type: 'boolean',
+  value: true,
+  description: 'Allow using of deprecated GLib API'
+)

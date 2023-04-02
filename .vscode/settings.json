@@ -1,0 +1,28 @@
+{
+    "files.associations": {
+        "gst.h": "c",
+        "glib-object.h": "c",
+        "gtk.h": "c",
+        "glib.h": "c",
+        "type_traits": "c",
+        "cuda_runtime_api.h": "c",
+        "gstnvdsmeta.h": "c",
+        "mosquitto.h": "c",
+        "nvds_msgapi.h": "c",
+        "stdio.h": "c",
+        "mosquitto_config_parser.h": "c",
+        "deepstream_test5_app.h": "c",
+        "deepstream_app.h": "c",
+        "cstddef": "c",
+        "limits": "c",
+        "gtk-video-renderer.h": "c",
+        "gdkx.h": "c",
+        "gprintf.h": "c",
+        "livi-gst-paintable.h": "c",
+        "gdkx11surface.h": "c",
+        "gstgldisplay.h": "c",
+        "gstgl_fwd.h": "c",
+        "gstglapi.h": "c",
+        "thread": "c"
+    }
+}
