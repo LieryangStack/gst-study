@@ -39,7 +39,8 @@
             "/usr/include/libmount",
             "/usr/include/blkid",
             "/usr/include/glib-2.0",
-            "/usr/lib/aarch64-linux-gnu/glib-2.0/include"
+            "/usr/lib/aarch64-linux-gnu/glib-2.0/include",
+            "/home/lieryang/Desktop/gst-study/gst-template/gst-plugin/src"
             ],
             // "browse": {
             //     "path": ["${workspaceFolder}",
