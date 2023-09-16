@@ -1,0 +1,58 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+            // /* vpf */
+            // "/home/lieryang/Desktop/VideoPlatform-1.0/deepstream/deepstream-app/",
+            // "/home/lieryang/Desktop/VideoPlatform-1.0/deepstream/apps-common/includes",
+            // "/home/lieryang/Desktop/VideoPlatform-1.0/deepstream/includes",
+            // "/home/lieryang/Desktop/VideoPlatform-1.0/ui/include",
+            // "/home/lieryang/Desktop/VideoPlatform-1.0/onvif/include",
+            /* cuda */
+            "/usr/local/cuda-11.4/include",
+            /* pkg-config --cflags gstreamer-1.0 gstreamer-video-1.0 x11 json-glib-1.0 */
+            "/usr/include/gstreamer-1.0",
+            "/usr/lib/aarch64-linux-gnu/gstreamer-1.0/include/",
+            "/usr/include/orc-0.4",
+            "/usr/include/json-glib-1.0",
+            //"/usr/include/libmount",重复
+            //"/usr/include/blkid",重复
+            //"/usr/include/glib-2.0",重复
+            // "/usr/lib/aarch64-linux-gnu/glib-2.0/include", 重复
+            /* pkg-config --cflags libadwaita-1(包含了gtk4的库和头文件) */
+            "/usr/include/libadwaita-1",
+            "/usr/include/gtk-4.0",
+            "/usr/include/pango-1.0",
+            "/usr/include/harfbuzz",
+            "/usr/include/pango-1.0",
+            "/usr/include/fribidi",
+            "/usr/include/harfbuzz",
+            "/usr/include/gdk-pixbuf-2.0",
+            "/usr/include/cairo",
+            "/usr/include/pixman-1",
+            "/usr/include/uuid",
+            "/usr/include/freetype2",
+            "/usr/include/libpng16",
+            "/usr/include/graphene-1.0",
+            "/usr/lib/aarch64-linux-gnu/graphene-1.0/include",
+            "/usr/include/libmount",
+            "/usr/include/blkid",
+            "/usr/include/glib-2.0",
+            "/usr/lib/aarch64-linux-gnu/glib-2.0/include",
+            "/home/lieryang/Desktop/gst-study/gst-template/gst-plugin/src"
+            ],
+            // "browse": {
+            //     "path": ["${workspaceFolder}",
+            //      "/home/lieryang/Desktop/VideoPlatform-1.0/deepstream/apps-common/src"]
+            // },
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-arm64"
+        }
+    ],
+    "version": 4
+}
+

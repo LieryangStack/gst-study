@@ -1,0 +1,133 @@
+0:00:00.437401924 29748 0xaaaad3260f50 WARN                    v4l2 gstv4l2object.c:4481:gst_v4l2_object_probe_caps:<nvv4l2_h264enc:src> Failed to probe pixel aspect ratio with VIDIOC_CROPCAP: Unknown error -1
+0:00:00.511167039 29748 0xaaaad3260f50 WARN                    v4l2 gstv4l2object.c:4481:gst_v4l2_object_probe_caps:<nvv4l2_decoder:src> Failed to probe pixel aspect ratio with VIDIOC_CROPCAP: Unknown error -1
+0:00:01.361795535 29748 0xaaaad321a400 WARN                  udpsrc gstudpsrc.c:1637:gst_udpsrc_open:<udpsrc0> warning: Could not create a buffer of requested 524288 bytes (Operation not permitted). Need net.admin privilege?
+0:00:01.362334098 29748 0xaaaad321a400 WARN                  udpsrc gstudpsrc.c:1647:gst_udpsrc_open:<udpsrc0> have udp buffer of 212992 bytes while 524288 were requested
+0:00:01.363950364 29748 0xaaaad321a400 WARN                  udpsrc gstudpsrc.c:1637:gst_udpsrc_open:<udpsrc1> warning: Could not create a buffer of requested 524288 bytes (Operation not permitted). Need net.admin privilege?
+0:00:01.364404702 29748 0xaaaad321a400 WARN                  udpsrc gstudpsrc.c:1647:gst_udpsrc_open:<udpsrc1> have udp buffer of 212992 bytes while 524288 were requested
+0:00:01.413483685 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 22113 will be dropped
+0:00:01.428181181 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17568 will be dropped
+0:00:01.547121925 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13307 will be dropped
+0:00:01.633442731 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18065 will be dropped
+0:00:01.755201252 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14993 will be dropped
+0:00:01.818927586 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19453 will be dropped
+0:00:01.931063842 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13092 will be dropped
+0:00:02.020752316 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 12227 will be dropped
+0:00:02.143521115 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13159 will be dropped
+0:00:02.233263253 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19908 will be dropped
+0:00:02.360168013 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 26321 will be dropped
+0:00:02.421922014 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18812 will be dropped
+0:00:02.545389057 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 21524 will be dropped
+0:00:02.632109480 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 12979 will be dropped
+0:00:02.765092163 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18088 will be dropped
+0:00:02.832416822 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16490 will be dropped
+0:00:02.944625590 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.015173389 too big, reset skew
+0:00:02.948695406 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18299 will be dropped
+0:00:03.040514675 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19570 will be dropped
+0:00:03.166805095 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14122 will be dropped
+0:00:03.222828950 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 11690 will be dropped
+0:00:03.336782975 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14516 will be dropped
+0:00:03.424348970 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16834 will be dropped
+0:00:03.541977929 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17365 will be dropped
+0:00:03.631654465 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17040 will be dropped
+0:00:03.754908417 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14542 will be dropped
+0:00:03.815914862 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15695 will be dropped
+0:00:03.940228180 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19805 will be dropped
+0:00:04.021417433 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15872 will be dropped
+0:00:04.142013450 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15378 will be dropped
+0:00:04.231831714 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16753 will be dropped
+0:00:04.354622975 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15475 will be dropped
+0:00:04.421256749 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13879 will be dropped
+0:00:04.542824322 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.064861366 too big, reset skew
+0:00:04.544145962 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15541 will be dropped
+0:00:04.629935465 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 12570 will be dropped
+0:00:04.753417482 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13616 will be dropped
+0:00:04.818670863 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15839 will be dropped
+0:00:04.948551702 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19885 will be dropped
+0:00:05.021835307 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17231 will be dropped
+0:00:05.141299060 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16097 will be dropped
+0:00:05.230908170 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16078 will be dropped
+0:00:05.352447678 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14676 will be dropped
+0:00:05.420393427 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18210 will be dropped
+0:00:05.541933447 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16230 will be dropped
+0:00:05.634421550 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17022 will be dropped
+0:00:05.754716154 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15400 will be dropped
+0:00:05.828582482 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18166 will be dropped
+0:00:05.941092304 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19682 will be dropped
+0:00:06.022491189 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18599 will be dropped
+0:00:06.139682799 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.063524248 too big, reset skew
+0:00:06.141523098 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15587 will be dropped
+0:00:06.230820654 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17476 will be dropped
+0:00:06.352373217 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14346 will be dropped
+0:00:06.420213077 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13439 will be dropped
+0:00:06.540852866 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13742 will be dropped
+0:00:06.631673022 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18062 will be dropped
+0:00:06.757259849 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17421 will be dropped
+0:00:06.819168377 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15308 will be dropped
+0:00:06.934899209 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 20153 will be dropped
+0:00:07.021368460 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13824 will be dropped
+0:00:07.142525500 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15143 will be dropped
+0:00:07.232786613 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18360 will be dropped
+0:00:07.355168876 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15957 will be dropped
+0:00:07.417819552 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16149 will be dropped
+0:00:07.534958775 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17496 will be dropped
+0:00:07.621232632 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15254 will be dropped
+0:00:07.739060563 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.066079184 too big, reset skew
+0:00:07.740584060 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17264 will be dropped
+0:00:07.829778862 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15073 will be dropped
+0:00:07.950029112 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17416 will be dropped
+0:00:08.040013550 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18338 will be dropped
+0:00:08.135393669 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13317 will be dropped
+0:00:08.221344803 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17543 will be dropped
+0:00:08.345350723 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19531 will be dropped
+0:00:08.435867227 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13062 will be dropped
+0:00:08.556431078 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17521 will be dropped
+0:00:08.623266418 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13869 will be dropped
+0:00:08.732180568 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17494 will be dropped
+0:00:08.820060449 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16315 will be dropped
+0:00:08.944742308 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 18346 will be dropped
+0:00:09.032825806 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13899 will be dropped
+0:00:09.155014531 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 15824 will be dropped
+0:00:09.219104959 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17031 will be dropped
+0:00:09.333436260 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.061046843 too big, reset skew
+0:00:09.336573623 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17981 will be dropped
+0:00:09.460047250 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 32097 will be dropped
+0:00:09.537485116 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 11521 will be dropped
+0:00:09.627741682 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 10552 will be dropped
+0:00:09.755827977 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 11612 will be dropped
+0:00:09.817839768 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 11586 will be dropped
+0:00:09.933246531 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16675 will be dropped
+0:00:10.027570257 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 24001 will be dropped
+0:00:10.141002065 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 21849 will be dropped
+0:00:10.232040812 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17448 will be dropped
+0:00:10.355660967 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13525 will be dropped
+0:00:10.428461973 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16136 will be dropped
+0:00:10.547777654 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17507 will be dropped
+0:00:10.637260935 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 16755 will be dropped
+0:00:10.765335868 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17077 will be dropped
+0:00:10.836361152 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.002893051 too big, reset skew
+0:00:10.838211723 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 13808 will be dropped
+0:00:10.952726576 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 19683 will be dropped
+0:00:11.033782511 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14828 will be dropped
+0:00:11.164915798 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 17341 will be dropped
+0:00:11.222135016 29748 0xffff5801a400 WARN               h264parse gsth264parse.c:1522:gst_h264_parse_handle_frame:<h264_parse> broken/invalid nal Type: 1 Slice, Size: 14750 will be dropped
+0:00:11.449975817 29748 0xffff5801a400 WARN                    v4l2 gstv4l2object.c:4481:gst_v4l2_object_probe_caps:<nvv4l2_decoder:src> Failed to probe pixel aspect ratio with VIDIOC_CROPCAP: Unknown error -1
+0:00:11.459273024 29748 0xaaaad321a460 WARN                    v4l2 gstv4l2object.c:3656:gst_v4l2_object_set_format_full:<nvv4l2_h264enc:sink> Unknown colorimetry tranfer 16
+0:00:11.462485267 29748 0xaaaad321a460 WARN                    v4l2 gstv4l2object.c:4049:gst_v4l2_object_set_format_full:<nvv4l2_h264enc:sink> Reuse caps framerate 0/1 - fix v4l2 output driver
+0:00:11.466839469 29748 0xaaaad321a460 WARN          v4l2bufferpool gstv4l2bufferpool.c:1082:gst_v4l2_buffer_pool_start:<nvv4l2_h264enc:pool:src> Uncertain or not enough buffers, enabling copy threshold
+0:00:11.615656955 29748 0xffff5801a400 WARN            v4l2videodec gstv4l2videodec.c:1847:gst_v4l2_video_dec_decide_allocation:<nvv4l2_decoder> Duration invalid, not setting latency
+0:00:11.621676991 29748 0xffff5801a400 WARN          v4l2bufferpool gstv4l2bufferpool.c:1082:gst_v4l2_buffer_pool_start:<nvv4l2_decoder:pool:src> Uncertain or not enough buffers, enabling copy threshold
+0:00:11.823718567 29748 0xffff78013000 WARN          v4l2bufferpool gstv4l2bufferpool.c:1533:gst_v4l2_buffer_pool_dqbuf:<nvv4l2_decoder:pool:src> Driver should never set v4l2_buffer.field to ANY
+0:00:11.927235050 29748 0xffff8c2632a0 WARN          v4l2bufferpool gstv4l2bufferpool.c:1533:gst_v4l2_buffer_pool_dqbuf:<nvv4l2_h264enc:pool:src> Driver should never set v4l2_buffer.field to ANY
+0:00:12.345112491 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.008724939 too big, reset skew
+0:00:13.949743797 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.071264373 too big, reset skew
+0:00:15.568653500 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.085629298 too big, reset skew
+0:00:17.140451225 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.038496455 too big, reset skew
+0:00:18.762700997 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.088874839 too big, reset skew
+0:00:20.351769977 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.055769856 too big, reset skew
+0:00:21.939258637 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.054157438 too big, reset skew
+0:00:23.543773647 29748 0xffff78013920 WARN         rtpjitterbuffer rtpjitterbuffer.c:575:calculate_skew: delta - skew: 0:00:01.071198764 too big, reset skew
+0:00:23.751329633 29748 0xffff8c262800 WARN           nveglglessink gsteglglessink.c:910:gst_eglglessink_event_thread:<nveglgles_sink> error: Output window was closed
+0:00:23.846143751 29748 0xffff8c2632a0 WARN           v4l2allocator gstv4l2allocator.c:1510:gst_v4l2_allocator_dqbuf:<nvv4l2_h264enc:pool:src:allocator> V4L2 provided buffer has bytesused 0 which is too small to include data_offset 0
+0:00:23.847771216 29748 0xaaaad321a300 WARN                   qtmux gstqtmux.c:5155:gst_qt_mux_add_buffer:<qtmux> Sample with zero duration on pad <qtmux:video_0> due to missing or backward timestamps on the input stream
+0:00:23.874523019 29748 0xaaaad3260f50 WARN             my category 07_dynamic_tee_bin.c:423:main:<test-pipeline> GST_STATE_NULL
+0:00:23.968760878 29748 0xaaaad3260f50 WARN             my category 07_dynamic_tee_bin.c:432:main:<test-pipeline> Exiting...

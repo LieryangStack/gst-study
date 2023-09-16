@@ -1,0 +1,171 @@
+digraph pipeline {
+  rankdir=LR;
+  fontname="sans";
+  fontsize="10";
+  labelloc=t;
+  nodesep=.1;
+  ranksep=.2;
+  label="<GstPipeline>\npipeline\n[>]";
+  node [style="filled,rounded", shape=box, fontsize="9", fontname="sans", margin="0.0,0.0"];
+  edge [labelfontsize="6", fontsize="9", fontname="monospace"];
+  
+  legend [
+    pos="0,0!",
+    margin="0.05,0.05",
+    style="filled",
+    label="Legend\lElement-States: [~] void-pending, [0] null, [-] ready, [=] paused, [>] playing\lPad-Activation: [-] none, [>] push, [<] pull\lPad-Flags: [b]locked, [f]lushing, [b]locking, [E]OS; upper-case is set\lPad-Task: [T] has started task, [t] has paused task\l",
+  ];
+  subgraph cluster_queue0_0xaaaaeea8a3d0 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstQueue\nqueue0\n[>]";
+    subgraph cluster_queue0_0xaaaaeea8a3d0_sink {
+      label="";
+      style="invis";
+      queue0_0xaaaaeea8a3d0_sink_0xaaaaeea81a80 [color=black, fillcolor="#aaaaff", label="sink\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    subgraph cluster_queue0_0xaaaaeea8a3d0_src {
+      label="";
+      style="invis";
+      queue0_0xaaaaeea8a3d0_src_0xaaaaeea81cd0 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfb][t]", height="0.2", style="filled,solid"];
+    }
+
+    queue0_0xaaaaeea8a3d0_sink_0xaaaaeea81a80 -> queue0_0xaaaaeea8a3d0_src_0xaaaaeea81cd0 [style="invis"];
+    fillcolor="#aaffaa";
+  }
+
+  subgraph cluster_conv_after_0xaaaaeea98ad0 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstVideoConvert\nconv_after\n[>]\nqos=TRUE";
+    subgraph cluster_conv_after_0xaaaaeea98ad0_sink {
+      label="";
+      style="invis";
+      conv_after_0xaaaaeea98ad0_sink_0xaaaaeea815e0 [color=black, fillcolor="#aaaaff", label="sink\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    subgraph cluster_conv_after_0xaaaaeea98ad0_src {
+      label="";
+      style="invis";
+      conv_after_0xaaaaeea98ad0_src_0xaaaaeea81830 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    conv_after_0xaaaaeea98ad0_sink_0xaaaaeea815e0 -> conv_after_0xaaaaeea98ad0_src_0xaaaaeea81830 [style="invis"];
+    fillcolor="#aaffaa";
+  }
+
+  conv_after_0xaaaaeea98ad0_src_0xaaaaeea81830 -> queue0_0xaaaaeea8a3d0_sink_0xaaaaeea81a80 [label="video/x-raw\l               width: 320\l              height: 240\l           framerate: 30/1\l      multiview-mode: mono\l  pixel-aspect-ratio: 1/1\l      interlace-mode: progressive\l              format: BGRx\l"]
+  subgraph cluster_effect_a_0xaaaaee7a8ab0 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstShagadelicTV\neffect_a\n[>]\nqos=TRUE";
+    subgraph cluster_effect_a_0xaaaaee7a8ab0_sink {
+      label="";
+      style="invis";
+      effect_a_0xaaaaee7a8ab0_sink_0xaaaaeea81140 [color=black, fillcolor="#aaaaff", label="sink\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    subgraph cluster_effect_a_0xaaaaee7a8ab0_src {
+      label="";
+      style="invis";
+      effect_a_0xaaaaee7a8ab0_src_0xaaaaeea81390 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    effect_a_0xaaaaee7a8ab0_sink_0xaaaaeea81140 -> effect_a_0xaaaaee7a8ab0_src_0xaaaaeea81390 [style="invis"];
+    fillcolor="#aaffaa";
+  }
+
+  effect_a_0xaaaaee7a8ab0_src_0xaaaaeea81390 -> conv_after_0xaaaaeea98ad0_sink_0xaaaaeea815e0 [label="video/x-raw\l               width: 320\l              height: 240\l           framerate: 30/1\l      multiview-mode: mono\l  pixel-aspect-ratio: 1/1\l      interlace-mode: progressive\l              format: BGRx\l"]
+  subgraph cluster_conv_before_0xaaaaeea94d40 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstVideoConvert\nconv_before\n[>]\nqos=TRUE";
+    subgraph cluster_conv_before_0xaaaaeea94d40_sink {
+      label="";
+      style="invis";
+      conv_before_0xaaaaeea94d40_sink_0xaaaaeea80ca0 [color=black, fillcolor="#aaaaff", label="sink\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    subgraph cluster_conv_before_0xaaaaeea94d40_src {
+      label="";
+      style="invis";
+      conv_before_0xaaaaeea94d40_src_0xaaaaeea80ef0 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    conv_before_0xaaaaeea94d40_sink_0xaaaaeea80ca0 -> conv_before_0xaaaaeea94d40_src_0xaaaaeea80ef0 [style="invis"];
+    fillcolor="#aaffaa";
+  }
+
+  conv_before_0xaaaaeea94d40_src_0xaaaaeea80ef0 -> effect_a_0xaaaaee7a8ab0_sink_0xaaaaeea81140 [label="video/x-raw\l               width: 320\l              height: 240\l           framerate: 30/1\l      multiview-mode: mono\l  pixel-aspect-ratio: 1/1\l      interlace-mode: progressive\l              format: BGRx\l"]
+  subgraph cluster_queue_1_0xaaaaeea8a0d0 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstQueue\nqueue_1\n[>]";
+    subgraph cluster_queue_1_0xaaaaeea8a0d0_sink {
+      label="";
+      style="invis";
+      queue_1_0xaaaaeea8a0d0_sink_0xaaaaeea80800 [color=black, fillcolor="#aaaaff", label="sink\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    subgraph cluster_queue_1_0xaaaaeea8a0d0_src {
+      label="";
+      style="invis";
+      queue_1_0xaaaaeea8a0d0_src_0xaaaaeea80a50 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfb][t]", height="0.2", style="filled,solid"];
+    }
+
+    queue_1_0xaaaaeea8a0d0_sink_0xaaaaeea80800 -> queue_1_0xaaaaeea8a0d0_src_0xaaaaeea80a50 [style="invis"];
+    fillcolor="#aaffaa";
+  }
+
+  queue_1_0xaaaaeea8a0d0_src_0xaaaaeea80a50 -> conv_before_0xaaaaeea94d40_sink_0xaaaaeea80ca0 [label="video/x-raw\l              format: AYUV\l               width: 320\l              height: 240\l           framerate: 30/1\l      multiview-mode: mono\l  pixel-aspect-ratio: 1/1\l      interlace-mode: progressive\l"]
+  subgraph cluster_capsfilter_0xaaaaeea86260 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstCapsFilter\ncapsfilter\n[>]\ncaps=video/x-raw, width=(int)320, height=(int)240, format=(string){ I420, YV12, YUY2,…";
+    subgraph cluster_capsfilter_0xaaaaeea86260_sink {
+      label="";
+      style="invis";
+      capsfilter_0xaaaaeea86260_sink_0xaaaaeea80360 [color=black, fillcolor="#aaaaff", label="sink\n[>][bfb]", height="0.2", style="filled,solid"];
+    }
+
+    subgraph cluster_capsfilter_0xaaaaeea86260_src {
+      label="";
+      style="invis";
+      capsfilter_0xaaaaeea86260_src_0xaaaaeea805b0 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfbE]", height="0.2", style="filled,solid"];
+    }
+
+    capsfilter_0xaaaaeea86260_sink_0xaaaaeea80360 -> capsfilter_0xaaaaeea86260_src_0xaaaaeea805b0 [style="invis"];
+    fillcolor="#aaffaa";
+  }
+
+  capsfilter_0xaaaaeea86260_src_0xaaaaeea805b0 -> queue_1_0xaaaaeea8a0d0_sink_0xaaaaeea80800 [label="video/x-raw\l              format: AYUV\l               width: 320\l              height: 240\l           framerate: 30/1\l      multiview-mode: mono\l  pixel-aspect-ratio: 1/1\l      interlace-mode: progressive\l"]
+  subgraph cluster_videotestsrc0_0xaaaaeea7e100 {
+    fontname="Bitstream Vera Sans";
+    fontsize="8";
+    style="filled,rounded";
+    color=black;
+    label="GstVideoTestSrc\nvideotestsrc0\n[>]\nis-live=TRUE";
+    subgraph cluster_videotestsrc0_0xaaaaeea7e100_src {
+      label="";
+      style="invis";
+      videotestsrc0_0xaaaaeea7e100_src_0xaaaaeea80110 [color=black, fillcolor="#ffaaaa", label="src\n[>][bfbE][t]", height="0.2", style="filled,solid"];
+    }
+
+    fillcolor="#ffaaaa";
+  }
+
+  videotestsrc0_0xaaaaeea7e100_src_0xaaaaeea80110 -> capsfilter_0xaaaaeea86260_sink_0xaaaaeea80360 [label="video/x-raw\l              format: AYUV\l               width: 320\l              height: 240\l           framerate: 30/1\l      multiview-mode: mono\l  pixel-aspect-ratio: 1/1\l      interlace-mode: progressive\l"]
+}
