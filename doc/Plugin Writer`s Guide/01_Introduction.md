@@ -77,21 +77,5 @@ GStreamer的核心功能包括提供插件、数据流、同步以及媒体类�
   - 向注册表添加新的媒体类型以及类型检测函数。这将允许你的插件在全新的媒体类型上运行。
 
 
-## 2 基本概念
-本指南的这一章介绍了GStreamer的基本概念。理解这些概念将有助于你理解扩展GStreamer涉及的问题。其中许多概念在GStreamer应用程序开发手册中有更详细的解释；这里介绍的基本概念主要用于温习你的记忆。
-
-### 2.1 Elements and Plugins
-
-### 2.2 Pads
-
-### 2.3 GstMiniObject, Buffers and Events
-
-### 2.4 Buffer Allocation
-
-### 2.5 Media types and Properties
-
-### 2.6 The Basic Types
-
-
 ## 参考
 [一、翻译自Gstreamer官网Plugin Writer`s Guide/Introduction](https://gstreamer.freedesktop.org/documentation/plugin-development/introduction/preface.html?gi-language=c)
