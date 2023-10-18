@@ -24,5 +24,6 @@
         "gstgl_fwd.h": "c",
         "gstglapi.h": "c",
         "thread": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
