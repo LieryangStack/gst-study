@@ -1,0 +1,5 @@
+# List of files installed by Meson
+# Does not contain files installed by custom scripts.
+/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstplugin.so
+/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstaudiofilterexample.so
+/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstmyfilter.so

@@ -1,0 +1,32 @@
+[
+  {
+    "directory": "/home/lieryang/Desktop/gst-study/gst-template/build",
+    "command": "cc -Igst-app/gst-app.p -Igst-app -I../gst-app -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g -pthread -MD -MQ gst-app/gst-app.p/src_main.c.o -MF gst-app/gst-app.p/src_main.c.o.d -o gst-app/gst-app.p/src_main.c.o -c ../gst-app/src/main.c",
+    "file": "../gst-app/src/main.c",
+    "output": "gst-app/gst-app.p/src_main.c.o"
+  },
+  {
+    "directory": "/home/lieryang/Desktop/gst-study/gst-template/build",
+    "command": "cc -Igst-app/gst-app.p -Igst-app -I../gst-app -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g -pthread -MD -MQ gst-app/gst-app.p/src_play.c.o -MF gst-app/gst-app.p/src_play.c.o.d -o gst-app/gst-app.p/src_play.c.o -c ../gst-app/src/play.c",
+    "file": "../gst-app/src/play.c",
+    "output": "gst-app/gst-app.p/src_play.c.o"
+  },
+  {
+    "directory": "/home/lieryang/Desktop/gst-study/gst-template/build",
+    "command": "cc -Igst-plugin/libgstplugin.so.p -Igst-plugin -I../gst-plugin -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g -fPIC -pthread -DHAVE_CONFIG_H -MD -MQ gst-plugin/libgstplugin.so.p/src_gstplugin.c.o -MF gst-plugin/libgstplugin.so.p/src_gstplugin.c.o.d -o gst-plugin/libgstplugin.so.p/src_gstplugin.c.o -c ../gst-plugin/src/gstplugin.c",
+    "file": "../gst-plugin/src/gstplugin.c",
+    "output": "gst-plugin/libgstplugin.so.p/src_gstplugin.c.o"
+  },
+  {
+    "directory": "/home/lieryang/Desktop/gst-study/gst-template/build",
+    "command": "cc -Igst-plugin/libgstaudiofilterexample.so.p -Igst-plugin -I../gst-plugin -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/local/gstreamer-1.22.6/include/orc-0.4 -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g -fPIC -pthread -DHAVE_CONFIG_H -MD -MQ gst-plugin/libgstaudiofilterexample.so.p/src_gstaudiofilter.c.o -MF gst-plugin/libgstaudiofilterexample.so.p/src_gstaudiofilter.c.o.d -o gst-plugin/libgstaudiofilterexample.so.p/src_gstaudiofilter.c.o -c ../gst-plugin/src/gstaudiofilter.c",
+    "file": "../gst-plugin/src/gstaudiofilter.c",
+    "output": "gst-plugin/libgstaudiofilterexample.so.p/src_gstaudiofilter.c.o"
+  },
+  {
+    "directory": "/home/lieryang/Desktop/gst-study/gst-template/build",
+    "command": "cc -Igst-plugin/libgstmyfilter.so.p -Igst-plugin -I../gst-plugin -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g -fPIC -pthread -DHAVE_CONFIG_H -MD -MQ gst-plugin/libgstmyfilter.so.p/src_gstmyfilter.c.o -MF gst-plugin/libgstmyfilter.so.p/src_gstmyfilter.c.o.d -o gst-plugin/libgstmyfilter.so.p/src_gstmyfilter.c.o -c ../gst-plugin/src/gstmyfilter.c",
+    "file": "../gst-plugin/src/gstmyfilter.c",
+    "output": "gst-plugin/libgstmyfilter.so.p/src_gstmyfilter.c.o"
+  }
+]

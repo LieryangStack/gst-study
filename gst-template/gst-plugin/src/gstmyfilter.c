@@ -114,6 +114,11 @@ static gboolean gst_my_filter_sink_event (GstPad * pad,
 static GstFlowReturn gst_my_filter_chain (GstPad * pad,
     GstObject * parent, GstBuffer * buf);
 
+static gboolean gst_my_filter_src_query (GstPad    *pad,
+    GstObject *parent, GstQuery  *query);
+static GstStateChangeReturn 
+gst_my_filter_change_state (GstElement *element, GstStateChange transition);
+
 /* GObject vmethod implementations */
 
 /* initialize the myfilter's class */
@@ -125,6 +130,8 @@ gst_my_filter_class_init (GstMyFilterClass * klass)
 
   gobject_class = (GObjectClass *) klass;
   gstelement_class = (GstElementClass *) klass;
+
+  gstelement_class->change_state = gst_my_filter_change_state;
 
   gobject_class->set_property = gst_my_filter_set_property;
   gobject_class->get_property = gst_my_filter_get_property;
@@ -164,6 +171,8 @@ gst_my_filter_init (GstMyFilter * filter)
   gst_element_add_pad (GST_ELEMENT (filter), filter->sinkpad);
 
   filter->srcpad = gst_pad_new_from_static_template (&src_factory, "src");
+  gst_pad_set_query_function (filter->srcpad,
+      gst_my_filter_src_query);
   GST_PAD_SET_PROXY_CAPS (filter->srcpad);
   gst_element_add_pad (GST_ELEMENT (filter), filter->srcpad);
 
@@ -251,6 +260,68 @@ gst_my_filter_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
 
   /* just push out the incoming buffer without touching it */
   return gst_pad_push (filter->srcpad, buf);
+}
+
+
+
+static gboolean
+gst_my_filter_src_query (GstPad    *pad,
+                 GstObject *parent,
+                 GstQuery  *query)
+{
+  gboolean ret;
+  GstMyFilter *filter = GST_MYFILTER (parent);
+
+  switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_POSITION:
+      /* we should report the current position */
+      
+      break;
+    case GST_QUERY_DURATION:
+      /* we should report the duration here */
+      
+      break;
+    case GST_QUERY_CAPS:
+      /* we should report the supported caps here */
+      
+      break;
+    default:
+      /* just call the default handler */
+      ret = gst_pad_query_default (pad, parent, query);
+      break;
+  }
+  return ret;
+}
+
+
+static GstStateChangeReturn
+gst_my_filter_change_state (GstElement *element, GstStateChange transition)
+{
+  GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
+  GstMyFilter *filter = GST_MYFILTER (element);
+
+  switch (transition) {
+	case GST_STATE_CHANGE_NULL_TO_READY:
+	  // if (!gst_my_filter_allocate_memory (filter))
+		// return GST_STATE_CHANGE_FAILURE;
+	  break;
+	default:
+	  break;
+  }
+
+  ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
+  if (ret == GST_STATE_CHANGE_FAILURE)
+	return ret;
+
+  switch (transition) {
+	case GST_STATE_CHANGE_READY_TO_NULL:
+	  // gst_my_filter_free_memory (filter);
+	  break;
+	default:
+	  break;
+  }
+
+  return ret;
 }
 
 

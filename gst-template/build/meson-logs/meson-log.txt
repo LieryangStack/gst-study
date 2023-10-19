@@ -1,0 +1,231 @@
+Build started at 2023-10-19T15:56:13.755758
+Main binary: /usr/bin/python3
+Build Options: -Dprefix=/usr
+Python system: Linux
+The Meson build system
+Version: 1.2.2
+Source dir: /home/lieryang/Desktop/gst-study/gst-template
+Build dir: /home/lieryang/Desktop/gst-study/gst-template/build
+Build type: native build
+Project name: gst-template
+Project version: 1.19.0.1
+-----------
+Detecting compiler via: `cc --version` -> 0
+stdout:
+cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-----------
+Running command: cc -E -dM -
+-----
+-----------
+Detecting linker via: `cc -Wl,--version` -> 0
+stdout:
+GNU ld (GNU Binutils for Ubuntu) 2.34
+Copyright (C) 2020 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) a later version.
+This program has absolutely no warranty.
+-----------
+stderr:
+collect2 version 9.4.0
+/usr/bin/ld -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc1PXAGj.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. --version -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o
+-----------
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc sanitycheckc.c -o sanitycheckc.exe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command:  /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/sanitycheckc.exe
+C compiler for the host machine: cc (gcc 9.4.0 "cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0")
+C linker for the host machine: cc ld.bfd 2.34
+-----------
+Detecting linker via: `gcc-ar --version` -> 0
+stdout:
+GNU ar (GNU Binutils for Ubuntu) 2.34
+Copyright (C) 2020 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) any later version.
+This program has absolutely no warranty.
+-----------
+-----------
+Detecting compiler via: `cc --version` -> 0
+stdout:
+cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-----------
+Running command: cc -E -dM -
+-----
+-----------
+Detecting linker via: `cc -Wl,--version` -> 0
+stdout:
+GNU ld (GNU Binutils for Ubuntu) 2.34
+Copyright (C) 2020 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) a later version.
+This program has absolutely no warranty.
+-----------
+stderr:
+collect2 version 9.4.0
+/usr/bin/ld -plugin /usr/lib/gcc/x86_64-linux-gnu/9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccXefDKG.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/9/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/9 -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/9/../../.. --version -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-linux-gnu/9/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/crtn.o
+-----------
+Sanity testing C compiler: cc
+Is cross compiler: False.
+Sanity check compiler command line: cc sanitycheckc.c -o sanitycheckc.exe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command:  /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/sanitycheckc.exe
+C compiler for the build machine: cc (gcc 9.4.0 "cc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0")
+C linker for the build machine: cc ld.bfd 2.34
+-----------
+Detecting linker via: `gcc-ar --version` -> 0
+stdout:
+GNU ar (GNU Binutils for Ubuntu) 2.34
+Copyright (C) 2020 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) any later version.
+This program has absolutely no warranty.
+-----------
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Pkg-config binary for 1 is not cached.
+Pkg-config binary missing from cross or native file, or env var undefined.
+Trying a default Pkg-config fallback at pkg-config
+Found pkg-config: /usr/bin/pkg-config (0.29.1)
+Determining dependency 'gstreamer-1.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --modversion gstreamer-1.0` -> 0
+stdout:
+1.22.6
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --cflags gstreamer-1.0` -> 0
+stdout:
+-pthread -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+-----------
+Called: `/usr/bin/pkg-config --libs gstreamer-1.0` -> 0
+stdout:
+-L/usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --libs gstreamer-1.0` -> 0
+stdout:
+-L/usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+-----------
+Running compile:
+Working directory:  /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/tmpj7hmsjoh
+Code:
+ 
+        #include<stdio.h>
+        int main(void) {
+            printf("%ld\n", (long)(sizeof(void *)));
+            return 0;
+        }
+-----------
+Command line: `cc /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/tmpj7hmsjoh/testfile.c -o /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/tmpj7hmsjoh/output.exe -D_FILE_OFFSET_BITS=64 -O0` -> 0
+Program stdout:
+
+8
+
+Program stderr:
+
+
+Running compile:
+Working directory:  /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/tmp0hca6u9m
+Code:
+ 
+-----------
+Command line: `cc /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/tmp0hca6u9m/testfile.c -o /home/lieryang/Desktop/gst-study/gst-template/build/meson-private/tmp0hca6u9m/output.obj -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs` -> 0
+stdout:
+install: /usr/lib/gcc/x86_64-linux-gnu/9/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/9/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../lib/:/lib/x86_64-linux-gnu/9/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/9/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/9/../../../:/lib/:/usr/lib/
+-----------
+Run-time dependency gstreamer-1.0 found: YES 1.22.6
+Pkg-config binary for 1 is cached.
+Determining dependency 'gstreamer-base-1.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --modversion gstreamer-base-1.0` -> 0
+stdout:
+1.22.6
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --cflags gstreamer-base-1.0` -> 0
+stdout:
+-pthread -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+-----------
+Called: `/usr/bin/pkg-config --libs gstreamer-base-1.0` -> 0
+stdout:
+-L/usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --libs gstreamer-base-1.0` -> 0
+stdout:
+-L/usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency gstreamer-base-1.0 found: YES 1.22.6
+Configuring config.h using configuration
+Pkg-config binary for 1 is cached.
+Determining dependency 'gstreamer-audio-1.0' with pkg-config executable '/usr/bin/pkg-config'
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --modversion gstreamer-audio-1.0` -> 0
+stdout:
+1.22.6
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --cflags gstreamer-audio-1.0` -> 0
+stdout:
+-pthread -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/local/gstreamer-1.22.6/include/orc-0.4 -I/usr/local/gstreamer-1.22.6/include/gstreamer-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+env[PKG_CONFIG_ALLOW_SYSTEM_LIBS]: 1
+-----------
+Called: `/usr/bin/pkg-config --libs gstreamer-audio-1.0` -> 0
+stdout:
+-L/usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu -lgstaudio-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+-----------
+env[PKG_CONFIG_PATH]: /usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu/pkgconfig
+-----------
+Called: `/usr/bin/pkg-config --libs gstreamer-audio-1.0` -> 0
+stdout:
+-L/usr/local/gstreamer-1.22.6/lib/x86_64-linux-gnu -lgstaudio-1.0 -lgstbase-1.0 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0
+-----------
+Run-time dependency gstreamer-audio-1.0 found: YES 1.22.6
+Build targets in project: 4
+
+gst-template 1.19.0.1
+
+  User defined options
+    prefix: /usr
+
+Found ninja-1.11.1.git.kitware.jobserver-1 at /home/lieryang/.local/bin/ninja
+WARNING: Running the setup command as `meson [options]` instead of `meson setup [options]` is ambiguous and deprecated.
