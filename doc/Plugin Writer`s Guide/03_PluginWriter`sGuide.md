@@ -4,45 +4,22 @@
 
 示例的滤波器元素将从一开始只有一个输入Pad和一个输出Pad。该滤波器起初将简单地将其汇Pad和源Pad上的媒体和事件数据传递，而不进行修改。但在本指南的这一部分结束时，您将学会添加一些更有趣的功能，包括属性和信号处理程序。并在阅读下一部分指南"[高级滤波器概念](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/index.html?gi-language=c)"后，您将能够为您的插件添加更多功能。
 
-Constructing the Boilerplate
+[01 Constructing the Boilerplate](./03_PluginWriter`sGuide/01_Constructing_the_Boilerplate.md)
 
-Specifying the pads
+[02 Specifying the pads](./03_PluginWriter`sGuide/02_Specifying_the_pads.md)
 
-The chain function
+[03 The chain function](./03_PluginWriter`sGuide/03_The_chain_function.md)
 
-The event function
+[04 The event function](./03_PluginWriter`sGuide/04_The_event_function.md)
 
-The query function
+[05 The query function](./03_PluginWriter`sGuide/05_The_query_function.md)
 
-What are states?
+[06 What are states?](./03_PluginWriter`sGuide/06_What_are_states.md)
 
-Adding Properties
+[07 Adding Properties](./03_PluginWriter`sGuide/07_Adding_Properties.md)
 
-Signals
+[08 Signals](./03_PluginWriter`sGuide/08_Signals.md)
 
-Building a Test Application
+[09 Building a Test Application](./03_PluginWriter`sGuide/09_Building_a_Test_Application.md)
 
-
-
-01 Request and Sometimes pads
-
-02 Different scheduling modes
-
-03 Caps negotiation
-
-04 Memory allocation
-
-05 Media Types and Properties
-
-06 Events: Seeking, Navigation and More
-
-07 Clocking
-
-08 Quality Of Service (QoS)
-
-09 Supporting Dynamic Parameters
-
-10 Interfaces
-
-11 Tagging (Metadata and Streaminfo)
 

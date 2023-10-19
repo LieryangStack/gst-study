@@ -46,7 +46,7 @@ gst_my_filter_change_state (GstElement *element, GstStateChange transition)
   GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
   GstMyFilter *filter = GST_MY_FILTER (element);
 
-  switch (transition) {
+  switch (transition) {tr
 	case GST_STATE_CHANGE_NULL_TO_READY:
 	  if (!gst_my_filter_allocate_memory (filter))
 		return GST_STATE_CHANGE_FAILURE;
