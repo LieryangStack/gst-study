@@ -251,9 +251,85 @@ gst_my_filter_chain (GstPad    *pad,
 
 ## Upstream caps (re)negotiation
 
+上游协商的主要用途是重新协商（部分）已经协商的管道以适应新的格式。一些实际的示例包括选择不同的视频尺寸，因为视频窗口的大小发生了变化，而视频输出本身无法重新缩放，或者因为音频通道配置发生了变化。
+
+向上游发出caps重新协商的请求是通过向上游发送GST_EVENT_RECONFIGURE事件来完成的。其想法是，它将指示上游元素通过进行新的允许caps的查询然后选择新的caps来重新配置其caps。发送RECONFIGURE事件的元素将通过从其GST_QUERY_CAPS查询函数返回新的首选caps来影响新caps的选择。RECONFIGURE事件将在其经过的所有pads上设置GST_PAD_FLAG_NEED_RECONFIGURE。
+
+需要注意的是，不同的元素实际上在这里有不同的责任：
+
+- 希望向上游提议新格式的元素需要首先使用ACCEPT_CAPS查询检查新caps是否可以在上游接受。然后，它们将发送RECONFIGURE事件，并准备好用新的首选格式回答CAPS查询。应该注意的是，当没有上游元素可以（或者愿意）重新协商时，元素需要处理当前配置的格式。
+
+- 根据转换协商运作的元素（按照“转换协商”）将RECONFIGURE事件传递给上游。由于这些元素只是基于上游caps执行固定的转换，因此它们需要将事件传递给上游，以便上游可以选择新格式。
+
+- 进行固定协商的元素（固定协商）会丢弃RECONFIGURE事件。这些元素无法重新配置，它们的输出caps不依赖于上游caps，因此可以丢弃该事件。
+
+- 可以在source pad上重新配置的元素（实现动态协商的src pad在“Dynamic negotiation”中有详细说明）应该使用gst_pad_check_reconfigure()检查其NEED_RECONFIGURE标志，当该函数返回TRUE时应开始重新协商。
+
 ## Implementing a CAPS query function
 
+当对等元素想要了解此垫支持的格式以及首选顺序时，会调用具有GST_QUERY_CAPS查询类型的_query()函数。返回值应该是该元素支持的所有格式，考虑到下游或上游的对等元素的限制，并按首选顺序排序，首选顺序最高的排在前面。
+
+```c
+
+static gboolean
+gst_my_filter_query (GstPad *pad, GstObject * parent, GstQuery * query)
+{
+  gboolean ret;
+  GstMyFilter *filter = GST_MY_FILTER (parent);
+
+  switch (GST_QUERY_TYPE (query)) {
+    case GST_QUERY_CAPS
+    {
+      GstPad *otherpad;
+      GstCaps *temp, *caps, *filt, *tcaps;
+      gint i;
+
+      otherpad = (pad == filter->srcpad) ? filter->sinkpad :
+                                           filter->srcpad;
+      caps = gst_pad_get_allowed_caps (otherpad);
+
+      gst_query_parse_caps (query, &filt);
+
+      /* We support *any* samplerate, indifferent from the samplerate
+       * supported by the linked elements on both sides. */
+      for (i = 0; i < gst_caps_get_size (caps); i++) {
+        GstStructure *structure = gst_caps_get_structure (caps, i);
+
+        gst_structure_remove_field (structure, "rate");
+      }
+
+      /* make sure we only return results that intersect our
+       * padtemplate */
+      tcaps = gst_pad_get_pad_template_caps (pad);
+      if (tcaps) {
+        temp = gst_caps_intersect (caps, tcaps);
+        gst_caps_unref (caps);
+        gst_caps_unref (tcaps);
+        caps = temp;
+      }
+      /* filter against the query filter when needed */
+      if (filt) {
+        temp = gst_caps_intersect (caps, filt);
+        gst_caps_unref (caps);
+        caps = temp;
+      }
+      gst_query_set_caps_result (query, caps);
+      gst_caps_unref (caps);
+      ret = TRUE;
+      break;
+    }
+    default:
+      ret = gst_pad_query_default (pad, parent, query);
+      break;
+  }
+  return ret;
+}
+
+```
+
 ## Pull-mode Caps negotiation
+
+“WRITEME” 表示文档中的某部分尚未编写或尚未完全理解。根据本章中提供的所有知识，您应该能够编写一个执行正确的caps协商的元素。如果有疑问，可以查看我们的Git仓库中相同类型的其他元素，以了解它们如何实现您想要完成的操作。
 
 ## 参考
 
