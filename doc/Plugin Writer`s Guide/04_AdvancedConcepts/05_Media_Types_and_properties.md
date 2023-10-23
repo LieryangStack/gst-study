@@ -22,4 +22,67 @@
 
 ## 2 Typefind Functions and Autoplugging
 
+仅仅定义数据类型是不够的。为了使随机数据文件被识别并播放，我们需要一种方式来从数据流中识别其类型。为此，引入了“类型识别”（Typefinding）。类型识别是一种检测数据流类型的过程。类型识别由两个独立的部分组成：首先，有无限数量的我们称之为类型识别函数的函数，它们每个都能从输入流中识别一个或多个类型。然后，其次，有一个小型引擎来注册和调用其中的每个函数。这就是类型识别核心。通常，在类型识别核心之上，你会编写一个自动插件（autoplugger），它能够使用这种类型检测系统来动态构建一个围绕输入流的管道。在这里，我们仅关注类型识别函数。
+
+类型识别函数通常位于 gst-plugins-base/gst/typefind/gsttypefindfunctions.c 中，除非有很好的理由（比如库依赖性）将其放在其他地方。集中存放的原因是减少加载以侦测流类型所需的插件数量。以下是一个示例，它将识别以“RIFF”标签开头，然后是文件大小，然后是“AVI”标签的AVI文件：
+
+```c
+static GstStaticCaps avi_caps = GST_STATIC_CAPS ("video/x-msvideo");
+#define AVI_CAPS gst_static_caps_get(&avi_caps)
+static void
+gst_avi_typefind_function (GstTypeFind *tf,
+              gpointer     pointer)
+{
+  guint8 *data = gst_type_find_peek (tf, 0, 12);
+
+  if (data &&
+      GUINT32_FROM_LE (&((guint32 *) data)[0]) == GST_MAKE_FOURCC ('R','I','F','F') &&
+      GUINT32_FROM_LE (&((guint32 *) data)[2]) == GST_MAKE_FOURCC ('A','V','I',' ')) {
+    gst_type_find_suggest (tf, GST_TYPE_FIND_MAXIMUM, AVI_CAPS);
+  }
+}
+
+GST_TYPE_FIND_REGISTER_DEFINE(avi, "video/x-msvideo", GST_RANK_PRIMARY,
+    gst_avi_typefind_function, "avi", AVI_CAPS, NULL, NULL);
+
+static gboolean
+plugin_init (GstPlugin *plugin)
+{
+  return GST_TYPEFIND_REGISTER(avi, plugin);
+}
+```
+
+请注意，gst-plugins/gst/typefind/gsttypefindfunctions.c 中有一些简化宏来减少代码量。如果你想提交带有新的类型识别函数的类型识别补丁，可以充分利用这些宏。
+
+关于自动插件已在应用程序开发手册中详细讨论过。
+
 ## 3 List of Defined Types
+
+以下是GStreamer中所有已定义的类型的列表。出于可读性的考虑，它们被分成不同的表格，分为音频、视频、容器、字幕和其他类型。在每个表格下面可能会有适用于该表格的一些注释。在定义每种类型时，我们尽量遵循 IANA 定义的类型和规则。
+
+直接跳转到特定的表格：
+
+- [Table of Audio Types](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/media-types.html?gi-language=c#table-of-audio-types)
+
+- [Table of Video Types](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/media-types.html?gi-language=c#table-of-video-types)
+
+- [Table of Container Types](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/media-types.html?gi-language=c#table-of-container-types)
+
+- [Table of Subtitle Types](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/media-types.html?gi-language=c#table-of-subtitle-types)
+
+- [Table of Other Types](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/media-types.html?gi-language=c#table-of-other-types)
+
+请注意，许多属性不是必需的，而是可选属性。这意味着大多数这些属性可以从容器头部提取，但是 - 如果容器头部未提供这些属性 - 也可以通过解析流头部或流内容来提取。政策是，你的元素应该仅通过解析自己的内容提供它知道的数据，而不是另一个元素的内容。例如，AVI头部在头部提供了包含音频流的采样率。而 MPEG 系统流则不提供。这意味着AVI流解复用器会将采样率作为 MPEG 音频流的属性提供，而 MPEG 解复用器不会。需要这些数据的解码器需要在其中插入一个流解析器来从头部提取这些数据或从流中计算它。
+
+### 3.1 Table of Audio Types
+
+### 3.2 Table of Video Types
+
+### 3.3 Table of Container Types
+
+### 3.4 Table of Subtitle Types
+
+### 3.5 Table of Other Types
+
+## 参考
+[翻译自：Media Types and Properties](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/media-types.html?gi-language=c#media-types-and-properties)
