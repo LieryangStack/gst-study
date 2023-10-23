@@ -482,8 +482,62 @@ gst_buffer_pool_config_add_option (config, GST_BUFFER_POOL_OPTION_VIDEO_META)
       gst_video_meta_set_alignment (meta, align);
  ```
 
-剩余部分未翻译
+3. v4l2h264enc：在回应 ALLOCATION 查询（propose_allocation()）时，向生产者提议自己的内存池。
 
+4. v4l2src：在收到 ALLOCATION 查询的回应（decide_allocation()）后，从建议的内存池中获取一个单一的缓冲区，并使用 GstVideoMeta.stride 和 gst_video_meta_get_plane_height() 检索其布局。
+
+5. v4l2src：尽可能地配置其驱动程序以生成与这些要求匹配的数据，然后尝试导入缓冲区。如果无法导入，v4l2src 将无法从 v4l2h264enc 导入，因此将退回到将自己的缓冲区发送给 v4l2h264enc，后者将不得不复制每个输入缓冲区以符合其要求。
+
+**v4l2src exporting buffers to v4l2h264enc**
+1. v4l2h264enc: 查询硬件的需求并相应地创建一个 GstVideoAlignment。
+
+2. v4l2h264enc: 创建一个名为 video-meta 的 GstStructure，将对齐信息串行化为其中。
+
+```c
+params = gst_structure_new ("video-meta",
+    "padding-top", G_TYPE_UINT, align.padding_top,
+    "padding-bottom", G_TYPE_UINT, align.padding_bottom,
+    "padding-left", G_TYPE_UINT, align.padding_left,
+    "padding-right", G_TYPE_UINT, align.padding_right,
+    NULL);
+```
+3. v4l2h264enc: 在处理 ALLOCATION 查询（propose_allocation()）时，将此结构作为参数传递，用于添加 GST_VIDEO_META_API_TYPE 类型的元数据：
+
+```c
+gst_query_add_allocation_meta (query, GST_VIDEO_META_API_TYPE, params);
+```
+
+4. v4l2src: 在收到 ALLOCATION 查询的回应（decide_allocation()）时，检索 GST_VIDEO_META_API_TYPE 类型的参数，以计算预期的缓冲区布局：
+
+```c
+guint video_idx;
+GstStructure *params;
+
+if (gst_query_find_allocation_meta (query, GST_VIDEO_META_API_TYPE, &video_idx)) {
+  gst_query_parse_nth_allocation_meta (query, video_idx, &params);
+
+  if (params) {
+    GstVideoAlignment align;
+    GstVideoInfo info;
+    gsize plane_size[GST_VIDEO_MAX_PLANES];
+
+    gst_video_alignment_reset (&align);
+
+    gst_structure_get_uint (s, "padding-top", &align.padding_top);
+    gst_structure_get_uint (s, "padding-bottom", &align.padding_bottom);
+    gst_structure_get_uint (s, "padding-left", &align.padding_left);
+    gst_structure_get_uint (s, "padding-right", &align.padding_right);
+
+    gst_video_info_from_caps (&info, caps);
+
+    gst_video_info_align_full (&info, align, plane_size);
+  }
+}
+```
+
+5. v4l2src: 使用 GstVideoInfo.stride 和 GST_VIDEO_INFO_PLANE_HEIGHT() 检索请求的缓冲区布局。
+
+6. v4l2src: 如果可能的话，配置其驱动程序以生成与这些要求匹配的数据。如果无法满足要求，驱动程序将生成具有自己布局的缓冲区，但 v4l2h264enc 将不得不复制每个输入缓冲区以符合其要求。
 
 ## 参考
 [翻译自：Memory allocation](https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/allocation.html?gi-language=c)
