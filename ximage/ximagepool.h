@@ -61,6 +61,9 @@ struct _GstXImageMemory
 #define GST_XIMAGE_BUFFER_POOL(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), GST_TYPE_XIMAGE_BUFFER_POOL, GstXImageBufferPool))
 #define GST_XIMAGE_BUFFER_POOL_CAST(obj) ((GstXImageBufferPool*)(obj))
 
+/**
+ * GstXimageBufferPool实例对象结构体
+*/
 struct _GstXImageBufferPool
 {
   GstBufferPool bufferpool;
@@ -77,6 +80,9 @@ struct _GstXImageBufferPool
   gboolean need_alignment;
 };
 
+/**
+ * GstXimageBufferPool类对象结构体
+*/
 struct _GstXImageBufferPoolClass
 {
   GstBufferPoolClass parent_class;
