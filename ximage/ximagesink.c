@@ -1623,9 +1623,6 @@ gst_x_image_sink_show_frame (GstVideoSink * vsink, GstBuffer * buf)
     gst_video_frame_unmap (&src);
   }
 
-  static int count = 0;
-  g_print ("%s = %d\n", __func__, count++);
-
   if (!gst_x_image_sink_ximage_put (ximagesink, to_put))
     goto no_window;
 

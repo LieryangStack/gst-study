@@ -57,6 +57,11 @@ gst_ximagesink_handle_xerror (Display * display, XErrorEvent * xevent)
   return 0;
 }
 
+/******************************GstXImageMemoryAllocator对象定义************START****************************/
+
+/**
+ * 赋值给GstAllocatorClass 类的 alloc
+*/
 static GstMemory *
 gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
     GstAllocationParams * params)
@@ -64,6 +69,9 @@ gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
   return NULL;
 }
 
+/**
+ * 赋值给GstAllocatorClass 类的 free
+*/
 static void
 gst_ximage_memory_free (GstAllocator * allocator, GstMemory * gmem)
 {
@@ -129,18 +137,27 @@ sub_mem:
   g_print ("%s = %d\n", __func__, count++);
 }
 
+/**
+ * 赋值给GstAllocator->mem_map
+*/
 static gpointer
 ximage_memory_map (GstXImageMemory * mem, gsize maxsize, GstMapFlags flags)
 {
   return mem->ximage->data + mem->parent.offset;
 }
 
+/**
+ * 赋值给GstAllocator->mem_unmap
+*/
 static gboolean
 ximage_memory_unmap (GstXImageMemory * mem)
 {
   return TRUE;
 }
 
+/**
+ * 赋值给GstAllocator->mem_share
+*/
 static GstXImageMemory *
 ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
 {
@@ -181,7 +198,8 @@ ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
 }
 
 /***
- * 定义对象
+ * 定义对象GstXImageMemoryAllocator，因为实例结构体和类结构体没有添加新的变量
+ * 所以这里使用别名，就不需要再定义 struct _GstAllocator{} 和 struct _GstAllocatorClass{}
 */
 typedef GstAllocator GstXImageMemoryAllocator;
 typedef GstAllocatorClass GstXImageMemoryAllocatorClass;
@@ -194,6 +212,9 @@ G_DEFINE_TYPE (GstXImageMemoryAllocator, ximage_memory_allocator,
 #define GST_TYPE_XIMAGE_MEMORY_ALLOCATOR   (ximage_memory_allocator_get_type())
 #define GST_IS_XIMAGE_MEMORY_ALLOCATOR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_XIMAGE_MEMORY_ALLOCATOR))
 
+/**
+ * GstXImageMemoryAllocator类初始化函数
+*/
 static void
 ximage_memory_allocator_class_init (GstXImageMemoryAllocatorClass * klass)
 {
@@ -205,6 +226,9 @@ ximage_memory_allocator_class_init (GstXImageMemoryAllocatorClass * klass)
   allocator_class->free = gst_ximage_memory_free;
 }
 
+/**
+ * GstXImageMemoryAllocator实例初始化函数
+*/
 static void
 ximage_memory_allocator_init (GstXImageMemoryAllocator * allocator)
 {
@@ -218,6 +242,14 @@ ximage_memory_allocator_init (GstXImageMemoryAllocator * allocator)
 
   GST_OBJECT_FLAG_SET (allocator, GST_ALLOCATOR_FLAG_CUSTOM_ALLOC);
 }
+
+/******************************GstXImageMemoryAllocator对象定义************END****************************/
+
+
+/******************************GstXImageBufferPool对象相关定义************START****************************/
+/**
+ * 
+*/
 
 static GstMemory *
 ximage_memory_alloc (GstXImageBufferPool * xpool)
@@ -536,7 +568,7 @@ beach:
   return result;
 }
 #endif /* HAVE_XSHM */
-
+GstBufferPool
 /* bufferpool */
 static void gst_ximage_buffer_pool_finalize (GObject * object);
 
