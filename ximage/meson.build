@@ -53,6 +53,3 @@ if x11_dep.found()
   )
   plugins += [gstximage]
 endif
-
-
-

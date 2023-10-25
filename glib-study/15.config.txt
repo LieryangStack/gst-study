@@ -1,3 +1,0 @@
-[Family]
-name=Li
-age=22
