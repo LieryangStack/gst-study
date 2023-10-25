@@ -2,7 +2,7 @@
 
  * Copyright (C), 2020-2099, Lieryng Tech. Co., Ltd.
 
- * FileName: ximagepool.c
+ * FileName: ximagesink.c
 
  * Author:        Version :          Date:
 

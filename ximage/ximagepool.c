@@ -6,7 +6,12 @@
 
  * Author:        Version :          Date:
 
- * Description:     // 模块描述
+ * Description:     1. 定义了GstXImageMemoryAllocator对象，该对象继承于GstAllocator
+                       该对象只在本文件中使用，对外不能使用
+                      
+   
+                    2. 定义了GstXimageBufferPool对象，该对象继承于GstBufferPool
+                       通过函数gst_ximage_buffer_pool_new创建GstXimageBufferPool对象
 
  * Version:         // 版本信息
 
@@ -120,6 +125,8 @@ beach:
 
 sub_mem:
   g_slice_free (GstXImageMemory, mem);
+  static int count = 0;
+  g_print ("%s = %d\n", __func__, count++);
 }
 
 static gpointer
@@ -173,6 +180,9 @@ ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
   return sub;
 }
 
+/***
+ * 定义对象
+*/
 typedef GstAllocator GstXImageMemoryAllocator;
 typedef GstAllocatorClass GstXImageMemoryAllocatorClass;
 
@@ -212,6 +222,8 @@ ximage_memory_allocator_init (GstXImageMemoryAllocator * allocator)
 static GstMemory *
 ximage_memory_alloc (GstXImageBufferPool * xpool)
 {
+  static int count = 0;
+  g_print ("%s = %d\n", __func__, count++);
   GstXImageSink *ximagesink;
   int (*handler) (Display *, XErrorEvent *);
   gboolean success = FALSE;
@@ -538,7 +550,7 @@ ximage_buffer_pool_get_options (GstBufferPool * pool)
   static const gchar *options[] = { GST_BUFFER_POOL_OPTION_VIDEO_META,
     GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT, NULL
   };
-
+  
   return options;
 }
 

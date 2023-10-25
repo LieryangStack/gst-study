@@ -68,3 +68,55 @@ GstVideoOverlay
 
 生成libximagesink.so动态库的源文件目录`$HOME/gstreamer-1.22.6/subprojects/gst-plugins-base/sys/ximage`
 
+### GstAllocator
+
+内存通常是通过调用 gst_allocator_alloc 方法来由分配器创建的。当使用 NULL 作为分配器时，将使用默认的分配器。
+
+可以使用 gst_allocator_register 注册新的分配器。分配器由名称标识，可以使用 gst_allocator_find 检索。可以使用 gst_allocator_set_default 来更改默认分配器。
+
+可以使用 gst_memory_new_wrapped 创建新的内存，它包装了在其他地方分配的内存。
+
+```c
+GObject
+    ╰──GInitiallyUnowned
+        ╰──GstObject
+            ╰──GstAllocator
+```
+
+
+```c
+struct _GstAllocator
+{
+  GstObject  object;
+
+  const gchar               *mem_type;
+
+  /*< public >*/
+  GstMemoryMapFunction       mem_map;
+  GstMemoryUnmapFunction     mem_unmap;
+
+  GstMemoryCopyFunction      mem_copy;
+  GstMemoryShareFunction     mem_share;
+  GstMemoryIsSpanFunction    mem_is_span;
+
+  GstMemoryMapFullFunction   mem_map_full;
+  GstMemoryUnmapFullFunction mem_unmap_full;
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING - 2];
+
+  GstAllocatorPrivate *priv;
+};
+
+struct _GstAllocatorClass {
+  GstObjectClass object_class;
+
+  /*< public >*/
+  GstMemory *  (*alloc)      (GstAllocator *allocator, gsize size,
+                              GstAllocationParams *params);
+  void         (*free)       (GstAllocator *allocator, GstMemory *memory);
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING];
+};
+```
