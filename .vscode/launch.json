@@ -29,8 +29,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/lieryang/Desktop/gst-study/gst-template/gst-plugin/src",
-      "program": "/home/lieryang/Desktop/gst-study/gst-template/gst-plugin/src/build/Debug/outDebug",
+      "cwd": "/home/lieryang/Desktop/gst-study/ximage",
+      "program": "/home/lieryang/Desktop/gst-study/ximage/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
