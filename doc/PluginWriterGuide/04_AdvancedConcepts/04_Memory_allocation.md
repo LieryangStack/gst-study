@@ -358,6 +358,51 @@ struct _GstBuffer {
 
 元数据系统将API规范（元数据及其API的外观）与其实现（工作原理）分开。这使得可以具有相同API的不同实现，例如，根据您运行的硬件的不同而有不同的实现。
 
+由于GstMeta用户自定义类型的注册没有使用`G_DEFINE_TYPE`，这部分学习起来有点吃力。
+
+```c
+/**
+ * GstMetaInfo:
+ * @api: tag identifying the metadata structure and api
+ * @type: type identifying the implementor of the api
+ * @size: size of the metadata
+ * @init_func: function for initializing the metadata
+ * @free_func: function for freeing the metadata
+ * @transform_func: function for transforming the metadata
+ *
+ * The #GstMetaInfo provides information about a specific metadata
+ * structure.
+ */
+struct _GstMetaInfo {
+  GType                      api;
+  GType                      type;
+  gsize                      size;
+
+  GstMetaInitFunction        init_func;
+  GstMetaFreeFunction        free_func;
+  GstMetaTransformFunction   transform_func;
+
+  /* No padding needed, GstMetaInfo is always allocated by GStreamer and is
+   * not subclassable or stack-allocatable, so we can extend it as we please
+   * just like interfaces */
+};
+```
+
+```c
+/**
+ * GstMeta:
+ * @flags: extra flags for the metadata
+ * @info: pointer to the #GstMetaInfo
+ *
+ * Base structure for metadata. Custom metadata will put this structure
+ * as the first member of their structure.
+ */
+struct _GstMeta {
+  GstMetaFlags       flags;
+  const GstMetaInfo *info;
+};
+```
+
 ### 3.1 API example
 
 在分配了一个新的GstBuffer之后，您可以使用特定于元数据的API向其添加元数据。这意味着您需要链接到定义元数据的头文件，以使用其API。
@@ -402,7 +447,80 @@ struct _GstBuffer {
 [...]
 ```
 
-### 3.2 Implementing new GstMeta
+### 3.2 分析GstVideoCropMeta
+
+```c
+/* filename:gstvideometa.h */
+
+/**
+ * GST_VIDEO_CROP_META_API_TYPE 和 GST_VIDEO_CROP_META_INFO是两个类型
+ * 但是这两个类型没有使用G_DEFINE_TYPE
+ * 
+*/
+#define GST_VIDEO_CROP_META_API_TYPE  (gst_video_crop_meta_api_get_type())
+#define GST_VIDEO_CROP_META_INFO  (gst_video_crop_meta_get_info())
+typedef struct _GstVideoCropMeta GstVideoCropMeta;
+
+struct _GstVideoCropMeta {
+  GstMeta       meta;
+
+  guint         x;
+  guint         y;
+  guint         width;
+  guint         height;
+};
+```
+
+对于头文件里面两个宏相关函数的定义都在源文件中实现。而且都使用了g_once_init_enter保证多线程初始化安全。
+
+```c
+/* filename:gstvideometa.c */
+
+GType
+gst_video_crop_meta_api_get_type (void)
+{
+  static GType type = 0;
+  static const gchar *tags[] =
+      { GST_META_TAG_VIDEO_STR, GST_META_TAG_VIDEO_SIZE_STR,
+    GST_META_TAG_VIDEO_ORIENTATION_STR, NULL
+  };
+
+  if (g_once_init_enter (&type)) {
+    GType _type = gst_meta_api_type_register ("GstVideoCropMetaAPI", tags);
+    g_once_init_leave (&type, _type);
+  }
+  return type;
+}
+
+const GstMetaInfo *
+gst_video_crop_meta_get_info (void)
+{
+  static const GstMetaInfo *video_crop_meta_info = NULL;
+
+  if (g_once_init_enter ((GstMetaInfo **) & video_crop_meta_info)) {
+    const GstMetaInfo *meta =
+        /* 用户自己实现init、free、transform函数 */
+        gst_meta_register (GST_VIDEO_CROP_META_API_TYPE, "GstVideoCropMeta",
+        sizeof (GstVideoCropMeta),
+        (GstMetaInitFunction) gst_video_crop_meta_init, 
+        (GstMetaFreeFunction) NULL, gst_video_crop_meta_transform);
+    g_once_init_leave ((GstMetaInfo **) & video_crop_meta_info,
+        (GstMetaInfo *) meta);
+  }
+  return video_crop_meta_info;
+}
+```
+
+以上基本工作完成之后，头文件定义buffer添加Meta和获取Meta函数声明
+
+```c
+#define gst_buffer_get_video_crop_meta(b) ((GstVideoCropMeta*)gst_buffer_get_meta((b),GST_VIDEO_CROP_META_API_TYPE))
+#define gst_buffer_add_video_crop_meta(b) ((GstVideoCropMeta*)gst_buffer_add_meta((b),GST_VIDEO_CROP_META_INFO, NULL))
+```
+
+
+
+### 3.3 Implementing new GstMeta
 
 在接下来的章节中，我们将展示如何向系统中添加新元数据，并在缓冲区上使用它。
 

@@ -8,7 +8,7 @@
 
  * Description:      1.测试GstMemory对象的相关特性
                      2.测试GstBuffer对象的相关特性
-
+                     3.
  * Version:         // 版本信息
 
  * Function List:   // 主要函数及其功能
@@ -23,6 +23,7 @@
  */
 
 #include <gst/gst.h>
+#include <gst/video/gstvideometa.h>
 
 int
 main (int argc, char *argv[]) {
@@ -67,6 +68,16 @@ main (int argc, char *argv[]) {
   // memset (info.data, 0xff, info.size);
   gst_buffer_unmap (buffer, &info);
 
+  /**************GstMeta****************/
+  
+  /* buffer points to a video frame, add some cropping metadata */
+  GstVideoCropMeta *meta = gst_buffer_add_video_crop_meta (buffer);
+  /* configure the cropping metadata */
+  meta->x = 8;
+  meta->y = 8;
+  meta->width = 120;
+  meta->height = 80;
+  
   gst_buffer_unref (buffer);
 
   gst_allocator_free (mem1->allocator, mem1);
@@ -74,6 +85,8 @@ main (int argc, char *argv[]) {
 
   g_print ("mem1->mini_object.refcount = %d\n", mem1->mini_object.refcount);
   g_print ("mem2->mini_object.refcount = %d\n", mem2->mini_object.refcount);
+
+
 
   return 0;
 }
