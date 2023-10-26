@@ -25,7 +25,11 @@
     "gstglapi.h": "c",
     "thread": "c",
     "ximagesink.h": "c",
-    "config.h": "c"
+    "config.h": "c",
+    "array": "c",
+    "string_view": "c",
+    "initializer_list": "c",
+    "utility": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": "",

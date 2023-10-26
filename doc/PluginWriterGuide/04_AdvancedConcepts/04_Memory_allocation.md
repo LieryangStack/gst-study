@@ -26,7 +26,8 @@ struct _GstMemory {
 };
 ```
 
-GstMemory是一个结构体，并不是一个对象，所以GstMemory肯定是由其他对象创建的，这个对象就是GstAllocator。
+
+<span style="background-color: pink; padding: 2px;">GstMemory轻量级对象，基于GstMiniObject，GstMemory对象由GstAllocator的gst_allocator_alloc()方法创建。</span>
 
 
 ### 1.1 GstAllocator
@@ -34,6 +35,72 @@ GstMemory是一个结构体，并不是一个对象，所以GstMemory肯定是�
 GstMemory对象是由GstAllocator对象创建的。大多数分配器实现了默认的gst_allocator_alloc()方法，但有些可能会实现不同的方法，例如，当需要额外的参数来分配特定的内存时。
 
 不同的分配器用于系统内存、共享内存和由DMAbuf文件描述符支持的内存。要实现对新类型内存的支持，您必须实现一个新的分配器对象。
+
+#### GstAllocatorClass类结构体
+
+```c
+/**
+ * GstAllocatorClass:
+ * @object_class:  Object parent class
+ * @alloc: 申请内存
+ * @free: 释放内存
+ *
+ * The #GstAllocator is used to create new memory.
+ */
+struct _GstAllocatorClass {
+  GstObjectClass object_class;
+
+  /*< public >*/
+  GstMemory *  (*alloc)      (GstAllocator *allocator, gsize size,
+                              GstAllocationParams *params);
+  void         (*free)       (GstAllocator *allocator, GstMemory *memory);
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING];
+};
+```
+
+#### GstAllocator实例结构体
+
+```c
+/**
+ * GstAllocator:
+ * @mem_map: the implementation of the GstMemoryMapFunction
+ * @mem_unmap: the implementation of the GstMemoryUnmapFunction
+ * @mem_copy: the implementation of the GstMemoryCopyFunction
+ * @mem_share: the implementation of the GstMemoryShareFunction
+ * @mem_is_span: the implementation of the GstMemoryIsSpanFunction
+ * @mem_map_full: the implementation of the GstMemoryMapFullFunction.
+ *      Will be used instead of @mem_map if present. (Since: 1.6)
+ * @mem_unmap_full: the implementation of the GstMemoryUnmapFullFunction.
+ *      Will be used instead of @mem_unmap if present. (Since: 1.6)
+ *
+ * The #GstAllocator is used to create new memory.
+ */
+struct _GstAllocator
+{
+  GstObject  object;
+
+  const gchar               *mem_type;
+
+  /*< public >*/
+  GstMemoryMapFunction       mem_map;
+  GstMemoryUnmapFunction     mem_unmap;
+
+  GstMemoryCopyFunction      mem_copy;
+  GstMemoryShareFunction     mem_share;
+  GstMemoryIsSpanFunction    mem_is_span;
+
+  GstMemoryMapFullFunction   mem_map_full;
+  GstMemoryUnmapFullFunction mem_unmap_full;
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING - 2];
+
+  GstAllocatorPrivate *priv;
+};
+```
+
 
 ### 1.2 GstMemory API example
 
@@ -51,7 +118,7 @@ GstMemory对象封装的内存的数据访问始终需要使用gst_memory_map()�
   /* allocate 100 bytes */
   mem = gst_allocator_alloc (NULL, 100, NULL);
 
-  /* get access to the memory in write mode */
+  /* 其实就是计算实际内存地址，返回用户实际数据地址给info.data */
   gst_memory_map (mem, &info, GST_MAP_WRITE);
 
   /* fill with pattern */
@@ -66,7 +133,147 @@ GstMemory对象封装的内存的数据访问始终需要使用gst_memory_map()�
 
 ### 1.3 Implementing a GstAllocator
 
-未写
+我们以系统GstAllocatorSystem为例，源代码在`gstreamer-1.22.6/subprojects/gstreamer/gst/gstallocator.c`
+
+实现一个GstAllocator有以下两部分：
+
+1. 基于GstMemory结构体，创建一个自定义的GstMemorySystem结构体
+
+    ```c
+    typedef struct
+    {
+      GstMemory mem;
+
+      gsize slice_size;
+      guint8 *data;
+
+      gpointer user_data;
+      GDestroyNotify notify;
+    } GstMemorySystem;
+    ```
+2. 基于GstAllocator，实现一个新的GstAllocatorSystem（由于新的分配器对象实例和类一般不需要新的成员变量，通常是为了实现虚函数方法）
+    ```c
+    [...]
+
+    typedef struct
+    {
+      GstAllocator parent;
+    } GstAllocatorSysmem;
+
+    typedef struct
+    {
+      GstAllocatorClass parent_class;
+    } GstAllocatorSysmemClass;
+
+    [...]
+
+    static void
+    gst_allocator_sysmem_class_init (GstAllocatorSysmemClass * klass)
+    {
+      GObjectClass *gobject_class;
+      GstAllocatorClass *allocator_class;
+
+      gobject_class = (GObjectClass *) klass;
+      allocator_class = (GstAllocatorClass *) klass;
+
+      gobject_class->finalize = gst_allocator_sysmem_finalize;
+      /* 创建GstMemory调用该方法 */
+      allocator_class->alloc = default_alloc;
+      /* 释放GstMemory调用该方法 */
+      allocator_class->free = default_free;
+    }
+
+    static void
+    gst_allocator_sysmem_init (GstAllocatorSysmem * allocator)
+    {
+      GstAllocator *alloc = GST_ALLOCATOR_CAST (allocator);
+
+      GST_CAT_DEBUG (GST_CAT_MEMORY, "init allocator %p", allocator);
+
+      alloc->mem_type = GST_ALLOCATOR_SYSMEM;
+      alloc->mem_map = (GstMemoryMapFunction) _sysmem_map;
+      alloc->mem_unmap = (GstMemoryUnmapFunction) _sysmem_unmap;
+      alloc->mem_copy = (GstMemoryCopyFunction) _sysmem_copy;
+      alloc->mem_share = (GstMemoryShareFunction) _sysmem_share;
+      alloc->mem_is_span = (GstMemoryIsSpanFunction) _sysmem_is_span;
+    }
+
+    [...]
+    ```
+#### GstAllocator相关函数
+
+这些函数供外部调用，从而实现创建内存和释放内存。
+
+- **gst_allocator_alloc**
+
+  ```c
+  GstMemory *
+  gst_allocator_alloc (GstAllocator * allocator, gsize size,
+      GstAllocationParams * params)
+  {
+    GstMemory *mem;
+    static GstAllocationParams defparams = { 0, 0, 0, 0, };
+    GstAllocatorClass *aclass;
+
+    if (params) {
+      g_return_val_if_fail (((params->align + 1) & params->align) == 0, NULL);
+    } else {
+      params = &defparams;
+    }
+
+    if (allocator == NULL)
+      /* 使用默认的分配器，既GstMemorySystem
+       * _default_allocator系统初始化的时候创建
+       * 实际创建的内存大小 = prefix + padding + align + 用户请求内存 + sizeof (GstMemorySystem)
+       */
+      allocator = _default_allocator;
+
+    aclass = GST_ALLOCATOR_GET_CLASS (allocator);
+    if (aclass->alloc)
+      /* 调用 GstAllocatorClass->alloc虚函数分配内存*/
+      mem = aclass->alloc (allocator, size, params);
+    else
+      mem = NULL;
+
+    return mem;
+  }
+  ```
+
+  分配内存的时候，用到了GstAllocationParams结构体，该结构体成员具体起什么作用呢？
+
+  ```c
+  struct _GstAllocationParams {
+    GstMemoryFlags flags; /* 申请的内存是否可读写，共享等特性 */
+    gsize          align; /* 内存对齐 */
+    gsize          prefix; /* 预先需要多少内存 */
+    gsize          padding; /* 尾部空余多少内存 */
+
+    /*< private >*/
+    gpointer _gst_reserved[GST_PADDING];
+  };
+  ```
+
+
+
+
+- **gst_allocator_free**
+
+  ```c
+  void
+  gst_allocator_free (GstAllocator * allocator, GstMemory * memory)
+  {
+    GstAllocatorClass *aclass;
+
+    g_return_if_fail (GST_IS_ALLOCATOR (allocator));
+    g_return_if_fail (memory != NULL);
+    g_return_if_fail (memory->allocator == allocator);
+
+    aclass = GST_ALLOCATOR_GET_CLASS (allocator);
+    if (aclass->free)
+      /* 调用 GstAllocatorClass->free虚函数释放内存*/
+      aclass->free (allocator, memory);
+  }
+  ```
 
 ## 2 GstBuffer
 
@@ -83,6 +290,25 @@ GstBuffer是一个轻量级对象，从上游传递到下游元素，包含内�
 - 媒体特定的偏移offset和offset_end值。对于视频，这是流中的帧号，对于音频，这是样本号。其他媒体可能使用不同的定义。
 
 - 通过GstMeta支持的任意结构，详情请见下文。
+
+
+```c
+struct _GstBuffer {
+  GstMiniObject          mini_object;
+
+  /*< public >*/ /* with COW */
+  GstBufferPool         *pool;
+
+  /* timestamp */
+  GstClockTime           pts; /* 呈现时间戳 */
+  GstClockTime           dts; /* 解码时间戳 */
+  GstClockTime           duration; /* 缓冲区内容持续时间 */
+
+  /* media specific offset */
+  guint64                offset;
+  guint64                offset_end;
+};
+```
 
 ### 2.1 Writability
 
