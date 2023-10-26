@@ -678,6 +678,181 @@ GstBufferPool可以处于非活动或活动状态。在非活动状态下，您�
 
 在接下来的章节中，我们将介绍如何使用GstBufferPool。
 
+```c
+/**
+ * GstBufferPool:
+ * @object: the parent structure
+ * @flushing: whether the pool is currently gathering back outstanding buffers
+ *
+ * The structure of a #GstBufferPool. Use the associated macros to access the public
+ * variables.
+ */
+struct _GstBufferPool {
+  GstObject            object;
+
+  /*< protected >*/
+  gint                 flushing;
+
+  /*< private >*/
+  GstBufferPoolPrivate *priv;
+
+  gpointer _gst_reserved[GST_PADDING];
+};
+
+/**
+ * GstBufferPoolClass:
+ * @object_class:  Object parent class
+ *
+ * The #GstBufferPool class.
+ */
+struct _GstBufferPoolClass {
+  GstObjectClass    object_class;
+
+  /*< public >*/
+
+  /**
+   * GstBufferPoolClass::get_options:
+   * @pool: the #GstBufferPool
+   *
+   * Get a list of options supported by this pool
+   *
+   * Returns: (array zero-terminated=1) (transfer none): a %NULL terminated array
+   *          of strings.
+   */
+  const gchar ** (*get_options)    (GstBufferPool *pool);
+
+  /**
+   * GstBufferPoolClass::set_config:
+   * @pool: the #GstBufferPool
+   * @config: the required configuration
+   *
+   * Apply the bufferpool configuration. The default configuration will parse
+   * the default config parameters.
+   *
+   * Returns: whether the configuration could be set.
+   */
+  gboolean       (*set_config)     (GstBufferPool *pool, GstStructure *config);
+
+  /**
+   * GstBufferPoolClass::start:
+   * @pool: the #GstBufferPool
+   *
+   * Start the bufferpool. The default implementation will preallocate
+   * min-buffers buffers and put them in the queue.
+   *
+   * Returns: whether the pool could be started.
+   */
+  gboolean       (*start)          (GstBufferPool *pool);
+
+  /**
+   * GstBufferPoolClass::stop:
+   * @pool: the #GstBufferPool
+   *
+   * Stop the bufferpool. the default implementation will free the
+   * preallocated buffers. This function is called when all the buffers are
+   * returned to the pool.
+   *
+   * Returns: whether the pool could be stopped.
+   */
+  gboolean       (*stop)           (GstBufferPool *pool);
+
+  /**
+   * GstBufferPoolClass::acquire_buffer:
+   * @pool: the #GstBufferPool
+   * @buffer: (out) (transfer full) (nullable): a location for a #GstBuffer
+   * @params: (transfer none) (nullable): parameters.
+   *
+   * Get a new buffer from the pool. The default implementation
+   * will take a buffer from the queue and optionally wait for a buffer to
+   * be released when there are no buffers available.
+   *
+   * Returns: a #GstFlowReturn such as %GST_FLOW_FLUSHING when the pool is
+   * inactive.
+   */
+  GstFlowReturn  (*acquire_buffer) (GstBufferPool *pool, GstBuffer **buffer,
+                                    GstBufferPoolAcquireParams *params);
+
+  /**
+   * GstBufferPoolClass::alloc_buffer:
+   * @pool: the #GstBufferPool
+   * @buffer: (out) (transfer full) (nullable): a location for a #GstBuffer
+   * @params: (transfer none) (nullable): parameters.
+   *
+   * Allocate a buffer. the default implementation allocates
+   * buffers from the configured memory allocator and with the configured
+   * parameters. All metadata that is present on the allocated buffer will
+   * be marked as #GST_META_FLAG_POOLED and #GST_META_FLAG_LOCKED and will
+   * not be removed from the buffer in #GstBufferPoolClass::reset_buffer.
+   * The buffer should have the #GST_BUFFER_FLAG_TAG_MEMORY cleared.
+   *
+   * Returns: a #GstFlowReturn to indicate whether the allocation was
+   * successful.
+   */
+  GstFlowReturn  (*alloc_buffer)   (GstBufferPool *pool, GstBuffer **buffer,
+                                    GstBufferPoolAcquireParams *params);
+
+  /**
+   * GstBufferPoolClass::reset_buffer:
+   * @pool: the #GstBufferPool
+   * @buffer: the #GstBuffer to reset
+   *
+   * Reset the buffer to its state when it was freshly allocated.
+   * The default implementation will clear the flags, timestamps and
+   * will remove the metadata without the #GST_META_FLAG_POOLED flag (even
+   * the metadata with #GST_META_FLAG_LOCKED). If the
+   * #GST_BUFFER_FLAG_TAG_MEMORY was set, this function can also try to
+   * restore the memory and clear the #GST_BUFFER_FLAG_TAG_MEMORY again.
+   */
+  void           (*reset_buffer)   (GstBufferPool *pool, GstBuffer *buffer);
+
+  /**
+   * GstBufferPoolClass::release_buffer:
+   * @pool: the #GstBufferPool
+   * @buffer: the #GstBuffer to release
+   *
+   * Release a buffer back in the pool. The default implementation
+   * will put the buffer back in the queue and notify any
+   * blocking #GstBufferPoolClass::acquire_buffer calls when the
+   * #GST_BUFFER_FLAG_TAG_MEMORY is not set on the buffer.
+   * If #GST_BUFFER_FLAG_TAG_MEMORY is set, the buffer will be freed with
+   * #GstBufferPoolClass::free_buffer.
+   */
+  void           (*release_buffer) (GstBufferPool *pool, GstBuffer *buffer);
+
+  /**
+   * GstBufferPoolClass::free_buffer:
+   * @pool: the #GstBufferPool
+   * @buffer: the #GstBuffer to free
+   *
+   * Free a buffer. The default implementation unrefs the buffer.
+   */
+  void           (*free_buffer)    (GstBufferPool *pool, GstBuffer *buffer);
+
+  /**
+   * GstBufferPoolClass::flush_start:
+   * @pool: the #GstBufferPool
+   *
+   * Enter the flushing state.
+   *
+   * Since: 1.4
+   */
+  void           (*flush_start)    (GstBufferPool *pool);
+
+  /**
+   * GstBufferPoolClass::flush_stop:
+   * @pool: the #GstBufferPool
+   *
+   * Leave the flushing state.
+   *
+   * Since: 1.4
+   */
+  void           (*flush_stop)     (GstBufferPool *pool);
+
+  /*< private >*/
+  gpointer _gst_reserved[GST_PADDING - 2];
+};
+```
+
 ### 4.1 API example
 
 可以有许多不同的GstBufferPool实现；它们都是GstBufferPool基类的子类。在本例中，我们假设我们以某种方式可以访问缓冲池，要么是因为我们自己创建了它，要么是因为我们在下面将看到的ALLOCATION查询的结果中得到了一个。

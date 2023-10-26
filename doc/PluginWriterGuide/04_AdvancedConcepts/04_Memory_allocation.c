@@ -87,6 +87,9 @@ main (int argc, char *argv[]) {
   g_print ("mem2->mini_object.refcount = %d\n", mem2->mini_object.refcount);
 
 
+  /*************GstBufferPool**************/
+  GstBufferPool
 
+  
   return 0;
 }
