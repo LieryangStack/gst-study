@@ -31,7 +31,9 @@
     "initializer_list": "c",
     "utility": "c",
     "gstvideometa.h": "c",
-    "video.h": "c"
+    "video.h": "c",
+    "chrono": "c",
+    "random": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.msvcBatchPath": "",

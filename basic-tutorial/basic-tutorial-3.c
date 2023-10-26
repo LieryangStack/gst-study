@@ -179,7 +179,7 @@ pad_added_handler (GstElement * src, GstPad * new_pad, CustomData * data)
   new_pad_type = gst_structure_get_name (new_pad_struct);
 
   
-  //gst_structure_foreach(new_pad_struct, print_pad_structure, NULL);
+  gst_structure_foreach(new_pad_struct, print_pad_structure, NULL);
 
   g_print("%s type is %s\n", GST_PAD_NAME (new_pad), new_pad_type);
 

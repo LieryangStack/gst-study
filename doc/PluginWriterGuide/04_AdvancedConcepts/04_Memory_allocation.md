@@ -674,7 +674,7 @@ GstBufferPool对象提供了一个方便的基类，用于管理可重用缓冲�
 
 GstBufferPool可以配置为管理特定大小的缓冲区的最小和最大数量。它还可以配置为使用特定的GstAllocator来管理缓冲区的内存。缓冲池还支持启用特定的缓冲池选项，例如向缓冲池的缓冲区添加GstMeta或启用缓冲区内存的特定填充。
 
-GstBufferPool可以处于非活动或活动状态。在非活动状态下，您可以配置缓冲池。在活动状态下，您不能再更改配置，但可以从缓冲池中获取和释放缓冲区。
+<span style="color:red;">GstBufferPool可以处于非活动或活动状态。在非活动状态下，您可以配置缓冲池。在活动状态下，您不能再更改配置，但可以从缓冲池中获取和释放缓冲区。</span>
 
 在接下来的章节中，我们将介绍如何使用GstBufferPool。
 
@@ -915,7 +915,7 @@ GstBufferPool的配置保存在一个通用的GstStructure中，可以使用gst_
 
 ### 4.2 Implementing a new GstBufferPool
 
-未写
+[参考：Gstreamer 内存池GstBufferPool](https://blog.csdn.net/yuangc/article/details/122049058)
 
 ## 5 GST_QUERY_ALLOCATION
 

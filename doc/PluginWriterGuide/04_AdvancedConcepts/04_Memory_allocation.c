@@ -8,7 +8,8 @@
 
  * Description:      1.测试GstMemory对象的相关特性
                      2.测试GstBuffer对象的相关特性
-                     3.
+                     3.测试GstMeta对象的相关特性
+                     4.测试GstBufferPool对象的相关特性
  * Version:         // 版本信息
 
  * Function List:   // 主要函数及其功能
@@ -24,6 +25,23 @@
 
 #include <gst/gst.h>
 #include <gst/video/gstvideometa.h>
+
+gboolean
+print_config_structure(GQuark   field_id,
+                       const GValue * value,
+                       gpointer user_data){
+
+  g_print("****foreach****\n");
+  g_print("%s\n", G_VALUE_TYPE_NAME(value));
+  g_print("%s\n",g_quark_to_string (field_id));
+
+  if( g_type_is_a(value->g_type, G_TYPE_UINT))
+    g_print("%s = %d\n",g_quark_to_string (field_id), g_value_get_uint(value));
+  // else
+  //   g_print("%s, %s\n",g_quark_to_string (field_id), g_value_get_string(value));
+
+  return TRUE;
+}
 
 int
 main (int argc, char *argv[]) {
@@ -86,10 +104,57 @@ main (int argc, char *argv[]) {
   g_print ("mem1->mini_object.refcount = %d\n", mem1->mini_object.refcount);
   g_print ("mem2->mini_object.refcount = %d\n", mem2->mini_object.refcount);
 
-
+  
   /*************GstBufferPool**************/
-  GstBufferPool
+  GstBufferPool *pool = gst_buffer_pool_new();;
 
+  GstStructure *config = gst_buffer_pool_get_config (pool);
+
+  GstAllocator *allocator = gst_allocator_find (NULL);
+
+  GstAllocationParams params = {0, 0, 0, 0};
+
+  /* set caps, size, minimum and maximum buffers in the pool */
+  /***
+   * 如果最大最小设置为0，则可以无限请求buffer
+   * 如果目前使用中的buffer达到了最大数量，该线程就会阻塞等待buffer释放。
+  */
+  gst_buffer_pool_config_set_params (config, NULL, 60, 0, 56);
+
+  /* configure allocator and parameters */
+  gst_buffer_pool_config_set_allocator (config, allocator, &params);
+
+  /* 查看config结构体里面的所有键值对 */
+  gst_structure_foreach(config, print_config_structure, NULL);
+
+  /* store the updated configuration again */
+  gst_buffer_pool_set_config (pool, config);
+
+  gst_buffer_pool_set_active (pool, TRUE);
+
+
+  for (guint i = 1; i < 100; i++) {
+    g_print ("i = %d ", i);
+    guint ret = gst_buffer_pool_acquire_buffer (pool, &buffer, NULL);
+    g_print ("ret = %d\n", ret);
+    if (G_UNLIKELY (ret != GST_FLOW_OK))
+      g_print (" acquire buffer failed\n");
+  }
+
+  gst_buffer_map (buffer, &info, GST_MAP_WRITE);
+  g_print ("info.maxsize = %ld\n", info.maxsize);
+  g_print ("info.size = %ld\n", info.size);
+  
+
+  // memset (info.data, 0xff, info.size);
+  gst_buffer_unmap (buffer, &info);
+
+  /* 查看config结构体里面的所有键值对 */
+  gst_structure_foreach(config, print_config_structure, NULL);
+
+  gst_buffer_pool_release_buffer(pool, buffer);
+
+  gst_object_unref (pool);
   
   return 0;
 }
