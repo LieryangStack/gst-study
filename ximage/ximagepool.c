@@ -248,7 +248,7 @@ ximage_memory_allocator_init (GstXImageMemoryAllocator * allocator)
 
 /******************************GstXImageBufferPool对象相关定义************START****************************/
 /**
- * 
+ *
 */
 
 static GstMemory *
