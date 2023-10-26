@@ -254,8 +254,6 @@ GstMemory对象封装的内存的数据访问始终需要使用gst_memory_map()�
   ```
 
 
-
-
 - **gst_allocator_free**
 
   ```c
@@ -279,7 +277,7 @@ GstMemory对象封装的内存的数据访问始终需要使用gst_memory_map()�
 
 GstBuffer是一个轻量级对象，从上游传递到下游元素，包含内存和元数据。它代表了被推送到或被下游元素拉取的多媒体内容。
 
-<span style="background-color: pink;">GstBuffer包含一个或多个GstMemory对象，</span>这些对象保存了缓冲区的数据。
+<span style="background-color: pink;">GstBuffer包含一个或多个GstMemory对象</span>，这些对象保存了缓冲区的数据。
 
 缓冲区中的元数据包括：
 

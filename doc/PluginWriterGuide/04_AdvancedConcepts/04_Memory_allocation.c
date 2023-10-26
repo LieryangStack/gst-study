@@ -104,7 +104,6 @@ main (int argc, char *argv[]) {
   g_print ("mem1->mini_object.refcount = %d\n", mem1->mini_object.refcount);
   g_print ("mem2->mini_object.refcount = %d\n", mem2->mini_object.refcount);
 
-  
   /*************GstBufferPool**************/
   GstBufferPool *pool = gst_buffer_pool_new();;
 
