@@ -55,7 +55,7 @@ GstVideoOverlay
 
 [以上内容翻译自：gstreamer官方对于ximagesink介绍](https://gstreamer.freedesktop.org/documentation/ximagesink/index.html?gi-language=c)
 
-## 1 
+## 目录结构
 
 ```bash
 ├── meson.build

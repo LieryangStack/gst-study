@@ -12,6 +12,23 @@
 
 GstMemory是一个管理内存区域的对象。该内存对象指向一个"maxsize"大小的内存区域。从"offset"开始，大小为"size"字节的区域是可访问的内存区域。创建了GstMemory之后，它的"maxsize"不能再更改，但是它的"offset"和"size"可以更改。
 
+```c
+struct _GstMemory {
+  GstMiniObject   mini_object;
+
+  GstAllocator   *allocator;
+
+  GstMemory      *parent;
+  gsize           maxsize;
+  gsize           align;
+  gsize           offset;
+  gsize           size;
+};
+```
+
+GstMemory是一个结构体，并不是一个对象，所以GstMemory肯定是由其他对象创建的，这个对象就是GstAllocator。
+
+
 ### 1.1 GstAllocator
 
 GstMemory对象是由GstAllocator对象创建的。大多数分配器实现了默认的gst_allocator_alloc()方法，但有些可能会实现不同的方法，例如，当需要额外的参数来分配特定的内存时。

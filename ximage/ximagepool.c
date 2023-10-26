@@ -196,7 +196,7 @@ ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
 
   return sub;
 }
-
+GstMapInfo
 /***
  * 定义对象GstXImageMemoryAllocator，因为实例结构体和类结构体没有添加新的变量
  * 所以这里使用别名，就不需要再定义 struct _GstAllocator{} 和 struct _GstAllocatorClass{}
