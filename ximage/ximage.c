@@ -12,7 +12,10 @@
 
  * Function List:   // 主要函数及其功能
 
-    1. -------
+    1. plugin_init
+
+    2. GST_PLUGIN_DEFINE
+
 
  * History:         // 历史修改记录
 
