@@ -1,34 +1,31 @@
-/**
-
- * Copyright (C), 2020-2099, Lieryng Tech. Co., Ltd.
-
- * FileName: ximage.c
-
- * Author:        Version :          Date:
-
- * Description:     // 模块描述
-
- * Version:         // 版本信息
-
- * Function List:   // 主要函数及其功能
-
-    1. plugin_init
-
-    2. GST_PLUGIN_DEFINE
-
-
- * History:         // 历史修改记录
-
-      <author>  <time>   <version >   <desc>
-
-
- */
+/*************************************************************************************************************************************************
+ * @filename: ximage.c
+ * @author: EryangLi
+ * @version: 1.0
+ * @date: Oct-27-2023
+ * @brief: ximagesink插件注册
+ * @note: 
+ * @history: 
+ *          1. Date:
+ *             Author:
+ *             Modification:
+ *      
+ *          2. ..
+ *************************************************************************************************************************************************
+*/
 
 #include "config.h"
-
 #include "ximagesink.h"
 
-
+/**
+ * *************************************************************************************************************************************************
+ * @name: plugin_init
+ * @brief: 插件初始化
+ * @param plugin: 插件对象地址
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 static gboolean
 plugin_init (GstPlugin * plugin)
 {
@@ -38,6 +35,23 @@ plugin_init (GstPlugin * plugin)
   return GST_ELEMENT_REGISTER (ximagesink, plugin);
 }
 
+/**
+ * *************************************************************************************************************************************************
+ * @name: GST_PLUGIN_DEFINE
+ * @brief: 插件定义宏
+ * @param major: major version number of the gstreamer-core that plugin was compiled for
+ * @param minor: minor version number of the gstreamer-core that plugin was compiled for
+ * @param name: short, but unique name of the plugin
+ * @param description: information about the purpose of the plugin
+ * @param init: function pointer to the plugin_init method with the signature of <code>static gboolean plugin_init (GstPlugin * plugin)</code>.
+ * @param version: full version string (e.g. VERSION from config.h)
+ * @param license: under which licence the package has been released, e.g. GPL, LGPL.
+ * @param package: the package-name (e.g. PACKAGE_NAME from config.h)
+ * @param origin: a description from where the package comes from (e.g. the homepage URL)
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
     GST_VERSION_MINOR,
     ximagesink,

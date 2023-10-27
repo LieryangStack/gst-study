@@ -1,3 +1,20 @@
+/*************************************************************************************************************************************************
+ * @filename: ximagepool.h
+ * @author: EryangLi
+ * @version: 1.0
+ * @date: Oct-27-2023
+ * @brief:  1.定义了GstXImageMemory结构体对象，继承于GstMemory（GstMiniObject型对象）
+ *          2.定义了GstXImageBufferPool对象，继承于GstBufferPool（GstObject型对象）
+ * @note: 
+ * @history: 
+ *          1. Date:
+ *             Author:
+ *             Modification:
+ *      
+ *          2. ..
+ *************************************************************************************************************************************************
+*/
+
 #ifndef __GST_XIMAGEPOOL_H__
 #define __GST_XIMAGEPOOL_H__
 
@@ -37,6 +54,7 @@ typedef struct _GstXImageBufferPoolClass GstXImageBufferPoolClass;
  *
  * Subclass of #GstMemory containing additional information about an XImage.
  */
+
 struct _GstXImageMemory
 {
   GstMemory parent;
@@ -62,7 +80,7 @@ struct _GstXImageMemory
 #define GST_XIMAGE_BUFFER_POOL_CAST(obj) ((GstXImageBufferPool*)(obj))
 
 /**
- * GstXimageBufferPool实例对象结构体
+ * @brief: bGstXimageBufferPool实例对象结构体
 */
 struct _GstXImageBufferPool
 {
@@ -81,17 +99,26 @@ struct _GstXImageBufferPool
 };
 
 /**
- * GstXimageBufferPool类对象结构体
+ *@brief: GstXimageBufferPool类对象结构体
 */
 struct _GstXImageBufferPoolClass
 {
   GstBufferPoolClass parent_class;
 };
 
+/**
+ * @brief: GstXImageBuffer对象，在GObject类型系统的注册值
+*/
 GType gst_ximage_buffer_pool_get_type (void);
 
+/**
+ * @brief: 创建GstXImageBuffer对象
+*/
 GstBufferPool * gst_ximage_buffer_pool_new     (GstXImageSink * ximagesink);
 
+/**
+ * @brief: 
+*/
 gboolean gst_x_image_sink_check_xshm_calls (GstXImageSink * ximagesink,
         GstXContext * xcontext);
 

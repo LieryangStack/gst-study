@@ -1,3 +1,19 @@
+/***********************************************************************
+ * @filename: ximage.c
+ * @version: 1.0
+ * @date: Oct-27-2023
+ * @brief: ximagesink插件注册
+ * @note: 
+ * @history: 
+ *          1. Date:
+ *             Author:
+ *             Modification:
+ *      
+ *          2. ..
+ * *********************************************************************
+*/
+
+
 #ifndef __GST_X_IMAGE_SINK_H__
 #define __GST_X_IMAGE_SINK_H__
 

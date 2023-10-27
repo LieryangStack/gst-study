@@ -1,30 +1,21 @@
-/**
-
- * Copyright (C), 2020-2099, Lieryng Tech. Co., Ltd.
-
- * FileName: ximagepool.c
-
- * Author:        Version :          Date:
-
- * Description:     1. 定义了GstXImageMemoryAllocator对象，该对象继承于GstAllocator
-                       该对象只在本文件中使用，对外不能使用
-                      
-   
-                    2. 定义了GstXimageBufferPool对象，该对象继承于GstBufferPool
-                       通过函数gst_ximage_buffer_pool_new创建GstXimageBufferPool对象
-
- * Version:         // 版本信息
-
- * Function List:   // 主要函数及其功能
-
-    1. -------
-
- * History:         // 历史修改记录
-
-      <author>  <time>   <version >   <desc>
-
-
- */
+/*************************************************************************************************************************************************
+ * @filename: ximagepool.c
+ * @author: EryangLi
+ * @version: 1.0
+ * @date: Oct-27-2023
+ * @brief:  1. 定义了一个GstXImageMemoryAllocator对象，该对象只在本源文件中使用
+ *             GstXImageMemoryAllocator继承于抽象类型GstAllocator（GstObject类对象）
+ * 
+ *          2.GstXImageBufferPool对象的相关实现
+ * @note: 
+ * @history: 
+ *          1. Date:
+ *             Author:
+ *             Modification:
+ *      
+ *          2. ..
+ *************************************************************************************************************************************************
+*/
 
 
 #include "config.h"
@@ -46,21 +37,42 @@ GST_DEBUG_CATEGORY (gst_debug_x_image_pool);
 /* X11 stuff */
 static gboolean error_caught = FALSE;
 
-static int
-gst_ximagesink_handle_xerror (Display * display, XErrorEvent * xevent)
-{
-  char error_msg[1024];
+/******************************GstXImageMemoryAllocator对象相关************START****************************/
 
-  XGetErrorText (display, xevent->error_code, error_msg, 1024);
-  GST_DEBUG ("ximagesink triggered an XError. error: %s", error_msg);
-  error_caught = TRUE;
-  return 0;
-}
+/***
+ * 定义对象GstXImageMemoryAllocator，因为实例结构体和类结构体没有添加新的变量
+ * 所以这里使用别名，就不需要再定义 struct _GstAllocator{} 和 struct _GstAllocatorClass{}
+*/
+typedef GstAllocator GstXImageMemoryAllocator;
+typedef GstAllocatorClass GstXImageMemoryAllocatorClass;
 
-/******************************GstXImageMemoryAllocator对象定义************START****************************/
+/* 上述做法相当于以下四行 */
+
+// typedef struct _GstXImageMemoryAllocator GstXImageMemoryAllocator;
+// typedef struct _GstXImageMemoryAllocatorClass GstXImageMemoryAllocatorClass;
+
+// struct _GstXImageMemoryAllocator {GstAllocator parent;};
+// struct _GstXImageMemoryAllocatorClass {GstAllocatorClass parent_class;};
+
+GType ximage_memory_allocator_get_type (void);
+
+#define GST_XIMAGE_ALLOCATOR_NAME "ximage"
+#define GST_TYPE_XIMAGE_MEMORY_ALLOCATOR   (ximage_memory_allocator_get_type())
+#define GST_IS_XIMAGE_MEMORY_ALLOCATOR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_XIMAGE_MEMORY_ALLOCATOR))
+
+G_DEFINE_TYPE (GstXImageMemoryAllocator, ximage_memory_allocator,
+    GST_TYPE_ALLOCATOR);
 
 /**
- * 赋值给GstAllocatorClass 类的 alloc
+ * *************************************************************************************************************************************************
+ * @name: gst_ximage_memory_alloc
+ * @brief: 暂时不知道为什么不使用该函数
+ * @param allocator:
+ * @param size: 
+ * @param params: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static GstMemory *
 gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
@@ -70,7 +82,14 @@ gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
 }
 
 /**
- * 赋值给GstAllocatorClass 类的 free
+ * *************************************************************************************************************************************************
+ * @name: gst_ximage_memory_free
+ * @brief: 
+ * @param allocator: 分配器地址
+ * @param gmem: 本质是GstXImageMemory型对象
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static void
 gst_ximage_memory_free (GstAllocator * allocator, GstMemory * gmem)
@@ -85,14 +104,14 @@ gst_ximage_memory_free (GstAllocator * allocator, GstMemory * gmem)
 
   GST_DEBUG_OBJECT (ximagesink, "free memory %p", mem);
 
-  /* Hold the object lock to ensure the XContext doesn't disappear */
+  /* 上锁，保证其他线程不会操作XContext */
   GST_OBJECT_LOCK (ximagesink);
-  /* We might have some buffers destroyed after changing state to NULL */
+
+  /* 当状态处于NULL之后，可能有一些内存需要被销毁 */
   if (ximagesink->xcontext == NULL) {
     GST_DEBUG_OBJECT (ximagesink, "Destroying XImage after XContext");
 #ifdef HAVE_XSHM
-    /* Need to free the shared memory segment even if the x context
-     * was already cleaned up */
+    /* 如果XContext上下文 == NULL，我们应该讲共享内存段与当前进程分离 */
     if (mem->SHMInfo.shmaddr != ((void *) -1)) {
       shmdt (mem->SHMInfo.shmaddr);
     }
@@ -133,12 +152,18 @@ beach:
 
 sub_mem:
   g_slice_free (GstXImageMemory, mem);
-  static int count = 0;
-  g_print ("%s = %d\n", __func__, count++);
 }
 
 /**
- * 赋值给GstAllocator->mem_map
+ * *************************************************************************************************************************************************
+ * @name: ximage_memory_map
+ * @brief: 
+ * @param allocator: 
+ * @param size: 
+ * @param params: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static gpointer
 ximage_memory_map (GstXImageMemory * mem, gsize maxsize, GstMapFlags flags)
@@ -147,7 +172,15 @@ ximage_memory_map (GstXImageMemory * mem, gsize maxsize, GstMapFlags flags)
 }
 
 /**
- * 赋值给GstAllocator->mem_unmap
+ * *************************************************************************************************************************************************
+ * @name: ximage_memory_unmap
+ * @brief: 
+ * @param allocator: 
+ * @param size: 
+ * @param params: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static gboolean
 ximage_memory_unmap (GstXImageMemory * mem)
@@ -156,7 +189,15 @@ ximage_memory_unmap (GstXImageMemory * mem)
 }
 
 /**
- * 赋值给GstAllocator->mem_share
+ * *************************************************************************************************************************************************
+ * @name: ximage_memory_share
+ * @brief: 
+ * @param allocator: 
+ * @param size: 
+ * @param params: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static GstXImageMemory *
 ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
@@ -196,24 +237,16 @@ ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
 
   return sub;
 }
-GstMapInfo
-/***
- * 定义对象GstXImageMemoryAllocator，因为实例结构体和类结构体没有添加新的变量
- * 所以这里使用别名，就不需要再定义 struct _GstAllocator{} 和 struct _GstAllocatorClass{}
-*/
-typedef GstAllocator GstXImageMemoryAllocator;
-typedef GstAllocatorClass GstXImageMemoryAllocatorClass;
 
-GType ximage_memory_allocator_get_type (void);
-G_DEFINE_TYPE (GstXImageMemoryAllocator, ximage_memory_allocator,
-    GST_TYPE_ALLOCATOR);
-
-#define GST_XIMAGE_ALLOCATOR_NAME "ximage"
-#define GST_TYPE_XIMAGE_MEMORY_ALLOCATOR   (ximage_memory_allocator_get_type())
-#define GST_IS_XIMAGE_MEMORY_ALLOCATOR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GST_TYPE_XIMAGE_MEMORY_ALLOCATOR))
 
 /**
- * GstXImageMemoryAllocator类初始化函数
+ * *************************************************************************************************************************************************
+ * @name: ximage_memory_allocator_class_init
+ * @brief: GstXImageMemoryAllocator类初始化函数
+ * @param klass:
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static void
 ximage_memory_allocator_class_init (GstXImageMemoryAllocatorClass * klass)
@@ -227,7 +260,13 @@ ximage_memory_allocator_class_init (GstXImageMemoryAllocatorClass * klass)
 }
 
 /**
- * GstXImageMemoryAllocator实例初始化函数
+ * *************************************************************************************************************************************************
+ * @name: ximage_memory_allocator_init
+ * @brief: GstXImageMemoryAllocator实例初始化函数
+ * @param allocator: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
 static void
 ximage_memory_allocator_init (GstXImageMemoryAllocator * allocator)
@@ -238,24 +277,55 @@ ximage_memory_allocator_init (GstXImageMemoryAllocator * allocator)
   alloc->mem_map = (GstMemoryMapFunction) ximage_memory_map;
   alloc->mem_unmap = (GstMemoryUnmapFunction) ximage_memory_unmap;
   alloc->mem_share = (GstMemoryShareFunction) ximage_memory_share;
+
   /* fallback copy and is_span */
 
   GST_OBJECT_FLAG_SET (allocator, GST_ALLOCATOR_FLAG_CUSTOM_ALLOC);
 }
 
-/******************************GstXImageMemoryAllocator对象定义************END****************************/
+/***************************************************GstXImageMemoryAllocator********************************END**************************************/
 
 
-/******************************GstXImageBufferPool对象相关定义************START****************************/
+/**************************************************GstXImageBufferPool相关***********************************START************************************/
+
+#define gst_ximage_buffer_pool_parent_class parent_class
+G_DEFINE_TYPE (GstXImageBufferPool, gst_ximage_buffer_pool,
+    GST_TYPE_BUFFER_POOL);
+
 /**
- *
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
 */
-
-static GstMemory *
-ximage_memory_alloc (GstXImageBufferPool * xpool)
+static int
+gst_ximagesink_handle_xerror (Display * display, XErrorEvent * xevent)
 {
-  static int count = 0;
-  g_print ("%s = %d\n", __func__, count++);
+  char error_msg[1024];
+
+  XGetErrorText (display, xevent->error_code, error_msg, 1024);
+  GST_DEBUG ("ximagesink triggered an XError. error: %s", error_msg);
+  error_caught = TRUE;
+  return 0;
+}
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: ximage_memory_alloc
+ * @brief: 1.申请了GstXImageMemory结构体需要的内存
+ *         2.
+ * @param xpool: 
+ * @called_by: 被ximage_buffer_pool_alloc调用
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
+static GstMemory *
+ximage_memory_alloc (GstXImageBufferPool * xpool) {
+
   GstXImageSink *ximagesink;
   int (*handler) (Display *, XErrorEvent *);
   gboolean success = FALSE;
@@ -269,6 +339,7 @@ ximage_memory_alloc (GstXImageBufferPool * xpool)
   width = xpool->padded_width;
   height = xpool->padded_height;
 
+  /* 给GstXImageMemory对象申请了内存 */
   mem = g_slice_new (GstXImageMemory);
 
 #ifdef HAVE_XSHM
@@ -404,7 +475,7 @@ ximage_memory_alloc (GstXImageBufferPool * xpool)
   g_mutex_unlock (&ximagesink->x_lock);
 
   success = TRUE;
-
+  
 beach:
   if (!success) {
     g_slice_free (GstXImageMemory, mem);
@@ -465,6 +536,16 @@ xattach_failed:
 #ifdef HAVE_XSHM
 /* This function checks that it is actually really possible to create an image
    using XShm */
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 gboolean
 gst_x_image_sink_check_xshm_calls (GstXImageSink * ximagesink,
     GstXContext * xcontext)
@@ -568,14 +649,17 @@ beach:
   return result;
 }
 #endif /* HAVE_XSHM */
-GstBufferPool
-/* bufferpool */
-static void gst_ximage_buffer_pool_finalize (GObject * object);
 
-#define gst_ximage_buffer_pool_parent_class parent_class
-G_DEFINE_TYPE (GstXImageBufferPool, gst_ximage_buffer_pool,
-    GST_TYPE_BUFFER_POOL);
 
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 static const gchar **
 ximage_buffer_pool_get_options (GstBufferPool * pool)
 {
@@ -586,6 +670,16 @@ ximage_buffer_pool_get_options (GstBufferPool * pool)
   return options;
 }
 
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 static gboolean
 ximage_buffer_pool_set_config (GstBufferPool * pool, GstStructure * config)
 {
@@ -675,6 +769,18 @@ wrong_caps:
 }
 
 /* This function handles GstXImageBuffer creation depending on XShm availability */
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: ximage_buffer_pool_alloc
+ * @brief: gstbufferpool_class->alloc_buffer = ximage_buffer_pool_alloc
+ * @param xpool: 
+ * @param buffer: 
+ * @param params: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 static GstFlowReturn
 ximage_buffer_pool_alloc (GstBufferPool * pool, GstBuffer ** buffer,
     GstBufferPoolAcquireParams * params)
@@ -718,6 +824,78 @@ no_buffer:
   }
 }
 
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
+static void
+gst_ximage_buffer_pool_finalize (GObject * object)
+{
+  GstXImageBufferPool *pool = GST_XIMAGE_BUFFER_POOL_CAST (object);
+
+  GST_LOG_OBJECT (pool, "finalize XImage buffer pool %p", pool);
+
+  if (pool->caps)
+    gst_caps_unref (pool->caps);
+  gst_object_unref (pool->sink);
+  gst_object_unref (pool->allocator);
+
+  G_OBJECT_CLASS (gst_ximage_buffer_pool_parent_class)->finalize (object);
+}
+
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
+static void
+gst_ximage_buffer_pool_class_init (GstXImageBufferPoolClass * klass)
+{
+  GObjectClass *gobject_class = (GObjectClass *) klass;
+  GstBufferPoolClass *gstbufferpool_class = (GstBufferPoolClass *) klass;
+
+  gobject_class->finalize = gst_ximage_buffer_pool_finalize;
+
+  gstbufferpool_class->get_options = ximage_buffer_pool_get_options;
+  gstbufferpool_class->set_config = ximage_buffer_pool_set_config;
+  gstbufferpool_class->alloc_buffer = ximage_buffer_pool_alloc;
+}
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
+static void
+gst_ximage_buffer_pool_init (GstXImageBufferPool * pool)
+{
+  /* nothing to do here */
+}
+
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: 
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
 GstBufferPool *
 gst_ximage_buffer_pool_new (GstXImageSink * ximagesink)
 {
@@ -734,38 +912,4 @@ gst_ximage_buffer_pool_new (GstXImageSink * ximagesink)
   GST_LOG_OBJECT (pool, "new XImage buffer pool %p", pool);
 
   return GST_BUFFER_POOL_CAST (pool);
-}
-
-static void
-gst_ximage_buffer_pool_class_init (GstXImageBufferPoolClass * klass)
-{
-  GObjectClass *gobject_class = (GObjectClass *) klass;
-  GstBufferPoolClass *gstbufferpool_class = (GstBufferPoolClass *) klass;
-
-  gobject_class->finalize = gst_ximage_buffer_pool_finalize;
-
-  gstbufferpool_class->get_options = ximage_buffer_pool_get_options;
-  gstbufferpool_class->set_config = ximage_buffer_pool_set_config;
-  gstbufferpool_class->alloc_buffer = ximage_buffer_pool_alloc;
-}
-
-static void
-gst_ximage_buffer_pool_init (GstXImageBufferPool * pool)
-{
-  /* nothing to do here */
-}
-
-static void
-gst_ximage_buffer_pool_finalize (GObject * object)
-{
-  GstXImageBufferPool *pool = GST_XIMAGE_BUFFER_POOL_CAST (object);
-
-  GST_LOG_OBJECT (pool, "finalize XImage buffer pool %p", pool);
-
-  if (pool->caps)
-    gst_caps_unref (pool->caps);
-  gst_object_unref (pool->sink);
-  gst_object_unref (pool->allocator);
-
-  G_OBJECT_CLASS (gst_ximage_buffer_pool_parent_class)->finalize (object);
 }
