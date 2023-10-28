@@ -2110,6 +2110,7 @@ gst_x_image_sink_finalize (GObject * object)
 static void
 gst_x_image_sink_init (GstXImageSink * ximagesink)
 {
+  g_print ("GstXImageSink = %p\n", ximagesink);
   ximagesink->display_name = NULL;
   ximagesink->xcontext = NULL;
   ximagesink->xwindow = NULL;
