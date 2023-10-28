@@ -426,7 +426,7 @@ ximage_memory_alloc (GstXImageBufferPool * xpool) {
 #endif /* HAVE_XSHM */
   {
     guint allocsize;
-
+    
     mem->ximage = XCreateImage (xcontext->disp,
         xcontext->visual,
         xcontext->depth, ZPixmap, 0, NULL, width, height, xcontext->bpp, 0);
