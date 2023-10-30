@@ -66,12 +66,13 @@ G_DEFINE_TYPE (GstXImageMemoryAllocator, ximage_memory_allocator,
 /**
  * *************************************************************************************************************************************************
  * @name: gst_ximage_memory_alloc
- * @brief: 暂时不知道为什么不使用该函数
+ * @brief: 暂时不知道为什么不使用该函数分配内存
  * @param allocator:
  * @param size: 
  * @param params: 
  * @return:
- * @note:
+ * @note: GstAllocatorClass *allocator_class->alloc = gst_ximage_memory_alloc; 
+ *        抽象类GstAllocator虚函数实现
  * *************************************************************************************************************************************************
 */
 static GstMemory *
@@ -84,11 +85,13 @@ gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
 /**
  * *************************************************************************************************************************************************
  * @name: gst_ximage_memory_free
- * @brief: 
+ * @brief: 仅仅释放GstXImageMemory结构体占用的内存，以及 XDestroyImage (mem->ximage);
+ *         GstXImageMemory用户实际使用的内存并不在这里释放
  * @param allocator: 分配器地址
  * @param gmem: 本质是GstXImageMemory型对象
  * @return:
- * @note:
+ * @note: GstAllocatorClass *allocator_class->free = gst_ximage_memory_free; 
+ *        抽象类GstAllocator虚函数实现
  * *************************************************************************************************************************************************
 */
 static void
@@ -97,6 +100,7 @@ gst_ximage_memory_free (GstAllocator * allocator, GstMemory * gmem)
   GstXImageMemory *mem = (GstXImageMemory *) gmem;
   GstXImageSink *ximagesink;
 
+  /* 为什么GstMemory对象的成员parent有指向，就不去执行以下操作？？？？？？ */
   if (gmem->parent)
     goto sub_mem;
 
@@ -110,7 +114,7 @@ gst_ximage_memory_free (GstAllocator * allocator, GstMemory * gmem)
   /* 当状态处于NULL之后，可能有一些内存需要被销毁 */
   if (ximagesink->xcontext == NULL) {
     GST_DEBUG_OBJECT (ximagesink, "Destroying XImage after XContext");
-#ifdef HAVE_XSHM
+#ifdef HAVE_XSHM /* x11扩展，内存共享机制，暂时没有了解 */
     /* 如果XContext上下文 == NULL，我们应该讲共享内存段与当前进程分离 */
     if (mem->SHMInfo.shmaddr != ((void *) -1)) {
       shmdt (mem->SHMInfo.shmaddr);
@@ -119,9 +123,10 @@ gst_ximage_memory_free (GstAllocator * allocator, GstMemory * gmem)
     goto beach;
   }
 
+  /* 目前xcontext不处于 NULL 状态，销毁mem->ximage */
   g_mutex_lock (&ximagesink->x_lock);
 
-#ifdef HAVE_XSHM
+#ifdef HAVE_XSHM /* x11扩展，内存共享机制，暂时没有了解 */
   if (ximagesink->xcontext->use_xshm) {
     if (mem->SHMInfo.shmaddr != ((void *) -1)) {
       GST_DEBUG_OBJECT (ximagesink, "XServer ShmDetaching from 0x%x id 0x%lx",
@@ -151,18 +156,18 @@ beach:
   gst_object_unref (mem->sink);
 
 sub_mem:
-  g_slice_free (GstXImageMemory, mem);
+  g_slice_free (GstXImageMemory, mem); /* 仅仅释放GstXImageMemory结构体占用的内存 */
 }
 
 /**
  * *************************************************************************************************************************************************
  * @name: ximage_memory_map
  * @brief: 
- * @param allocator: 
- * @param size: 
- * @param params: 
+ * @param mem: 
+ * @param maxsize: 
+ * @param flags: 
  * @return:
- * @note:
+ * @note: GstAllocator *alloc->mem_map = (GstMemoryMapFunction) ximage_memory_map;
  * *************************************************************************************************************************************************
 */
 static gpointer
@@ -175,11 +180,9 @@ ximage_memory_map (GstXImageMemory * mem, gsize maxsize, GstMapFlags flags)
  * *************************************************************************************************************************************************
  * @name: ximage_memory_unmap
  * @brief: 
- * @param allocator: 
- * @param size: 
- * @param params: 
+ * @param mem: 
  * @return:
- * @note:
+ * @note: GstAllocator *alloc->mem_unmap = (GstMemoryUnmapFunction) ximage_memory_unmap;
  * *************************************************************************************************************************************************
 */
 static gboolean
@@ -192,11 +195,11 @@ ximage_memory_unmap (GstXImageMemory * mem)
  * *************************************************************************************************************************************************
  * @name: ximage_memory_share
  * @brief: 
- * @param allocator: 
+ * @param mem: 
+ * @param offset: 
  * @param size: 
- * @param params: 
  * @return:
- * @note:
+ * @note: GstAllocator *alloc->mem_share = (GstMemoryShareFunction) ximage_memory_share;
  * *************************************************************************************************************************************************
 */
 static GstXImageMemory *
@@ -245,7 +248,7 @@ ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
  * @brief: GstXImageMemoryAllocator类初始化函数
  * @param klass:
  * @return:
- * @note:
+ * @note: 
  * *************************************************************************************************************************************************
 */
 static void
@@ -537,118 +540,6 @@ xattach_failed:
 /* This function checks that it is actually really possible to create an image
    using XShm */
 
-/**
- * *************************************************************************************************************************************************
- * @name: 
- * @brief: 
- * @param xpool: 
- * @return:
- * @note:
- * *************************************************************************************************************************************************
-*/
-gboolean
-gst_x_image_sink_check_xshm_calls (GstXImageSink * ximagesink,
-    GstXContext * xcontext)
-{
-  XImage *ximage;
-  XShmSegmentInfo SHMInfo;
-  size_t size;
-  int (*handler) (Display *, XErrorEvent *);
-  gboolean result = FALSE;
-  gboolean did_attach = FALSE;
-
-  g_return_val_if_fail (xcontext != NULL, FALSE);
-
-  /* Sync to ensure any older errors are already processed */
-  XSync (xcontext->disp, FALSE);
-
-  /* Set defaults so we don't free these later unnecessarily */
-  SHMInfo.shmaddr = ((void *) -1);
-  SHMInfo.shmid = -1;
-
-  /* Setting an error handler to catch failure */
-  error_caught = FALSE;
-  handler = XSetErrorHandler (gst_ximagesink_handle_xerror);
-
-  /* Trying to create a 1x1 ximage */
-  GST_DEBUG ("XShmCreateImage of 1x1");
-
-  ximage = XShmCreateImage (xcontext->disp, xcontext->visual,
-      xcontext->depth, ZPixmap, NULL, &SHMInfo, 1, 1);
-
-  /* Might cause an error, sync to ensure it is noticed */
-  XSync (xcontext->disp, FALSE);
-  if (!ximage || error_caught) {
-    GST_WARNING ("could not XShmCreateImage a 1x1 image");
-    goto beach;
-  }
-  size = ximage->height * ximage->bytes_per_line;
-
-  SHMInfo.shmid = shmget (IPC_PRIVATE, size, IPC_CREAT | 0777);
-  if (SHMInfo.shmid == -1) {
-    GST_WARNING ("could not get shared memory of %" G_GSIZE_FORMAT " bytes",
-        size);
-    goto beach;
-  }
-
-  SHMInfo.shmaddr = shmat (SHMInfo.shmid, NULL, 0);
-  if (SHMInfo.shmaddr == ((void *) -1)) {
-    GST_WARNING ("Failed to shmat: %s", g_strerror (errno));
-    /* Clean up the shared memory segment */
-    shmctl (SHMInfo.shmid, IPC_RMID, NULL);
-    goto beach;
-  }
-
-  ximage->data = SHMInfo.shmaddr;
-  SHMInfo.readOnly = FALSE;
-
-  if (XShmAttach (xcontext->disp, &SHMInfo) == 0) {
-    GST_WARNING ("Failed to XShmAttach");
-    /* Clean up the shared memory segment */
-    shmctl (SHMInfo.shmid, IPC_RMID, NULL);
-    goto beach;
-  }
-
-  /* Sync to ensure we see any errors we caused */
-  XSync (xcontext->disp, FALSE);
-
-  /* Delete the shared memory segment as soon as everyone is attached.
-   * This way, it will be deleted as soon as we detach later, and not
-   * leaked if we crash. */
-  shmctl (SHMInfo.shmid, IPC_RMID, NULL);
-
-  if (!error_caught) {
-    GST_DEBUG ("XServer ShmAttached to 0x%x, id 0x%lx", SHMInfo.shmid,
-        SHMInfo.shmseg);
-
-    did_attach = TRUE;
-    /* store whether we succeeded in result */
-    result = TRUE;
-  } else {
-    GST_WARNING ("MIT-SHM extension check failed at XShmAttach. "
-        "Not using shared memory.");
-  }
-
-beach:
-  /* Sync to ensure we swallow any errors we caused and reset error_caught */
-  XSync (xcontext->disp, FALSE);
-
-  error_caught = FALSE;
-  XSetErrorHandler (handler);
-
-  if (did_attach) {
-    GST_DEBUG ("XServer ShmDetaching from 0x%x id 0x%lx",
-        SHMInfo.shmid, SHMInfo.shmseg);
-    XShmDetach (xcontext->disp, &SHMInfo);
-    XSync (xcontext->disp, FALSE);
-  }
-  if (SHMInfo.shmaddr != ((void *) -1))
-    shmdt (SHMInfo.shmaddr);
-  if (ximage)
-    XDestroyImage (ximage);
-  return result;
-}
-#endif /* HAVE_XSHM */
 
 
 /**
@@ -826,7 +717,7 @@ no_buffer:
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
+ * @name: gst_ximage_buffer_pool_finalize
  * @brief: 
  * @param xpool: 
  * @return:
@@ -851,7 +742,7 @@ gst_ximage_buffer_pool_finalize (GObject * object)
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
+ * @name: gst_ximage_buffer_pool_class_init
  * @brief: 
  * @param xpool: 
  * @return:
@@ -873,7 +764,7 @@ gst_ximage_buffer_pool_class_init (GstXImageBufferPoolClass * klass)
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
+ * @name: gst_ximage_buffer_pool_init
  * @brief: 
  * @param xpool: 
  * @return:
@@ -889,7 +780,7 @@ gst_ximage_buffer_pool_init (GstXImageBufferPool * pool)
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
+ * @name: gst_ximage_buffer_pool_new
  * @brief: 
  * @param xpool: 
  * @return:
@@ -913,3 +804,117 @@ gst_ximage_buffer_pool_new (GstXImageSink * ximagesink)
 
   return GST_BUFFER_POOL_CAST (pool);
 }
+
+
+/**
+ * *************************************************************************************************************************************************
+ * @name: gst_x_image_sink_check_xshm_calls
+ * @brief: 
+ * @param xpool: 
+ * @return:
+ * @note:
+ * *************************************************************************************************************************************************
+*/
+gboolean
+gst_x_image_sink_check_xshm_calls (GstXImageSink * ximagesink,
+    GstXContext * xcontext)
+{
+  XImage *ximage;
+  XShmSegmentInfo SHMInfo;
+  size_t size;
+  int (*handler) (Display *, XErrorEvent *);
+  gboolean result = FALSE;
+  gboolean did_attach = FALSE;
+
+  g_return_val_if_fail (xcontext != NULL, FALSE);
+
+  /* Sync to ensure any older errors are already processed */
+  XSync (xcontext->disp, FALSE);
+
+  /* Set defaults so we don't free these later unnecessarily */
+  SHMInfo.shmaddr = ((void *) -1);
+  SHMInfo.shmid = -1;
+
+  /* Setting an error handler to catch failure */
+  error_caught = FALSE;
+  handler = XSetErrorHandler (gst_ximagesink_handle_xerror);
+
+  /* Trying to create a 1x1 ximage */
+  GST_DEBUG ("XShmCreateImage of 1x1");
+
+  ximage = XShmCreateImage (xcontext->disp, xcontext->visual,
+      xcontext->depth, ZPixmap, NULL, &SHMInfo, 1, 1);
+
+  /* Might cause an error, sync to ensure it is noticed */
+  XSync (xcontext->disp, FALSE);
+  if (!ximage || error_caught) {
+    GST_WARNING ("could not XShmCreateImage a 1x1 image");
+    goto beach;
+  }
+  size = ximage->height * ximage->bytes_per_line;
+
+  SHMInfo.shmid = shmget (IPC_PRIVATE, size, IPC_CREAT | 0777);
+  if (SHMInfo.shmid == -1) {
+    GST_WARNING ("could not get shared memory of %" G_GSIZE_FORMAT " bytes",
+        size);
+    goto beach;
+  }
+
+  SHMInfo.shmaddr = shmat (SHMInfo.shmid, NULL, 0);
+  if (SHMInfo.shmaddr == ((void *) -1)) {
+    GST_WARNING ("Failed to shmat: %s", g_strerror (errno));
+    /* Clean up the shared memory segment */
+    shmctl (SHMInfo.shmid, IPC_RMID, NULL);
+    goto beach;
+  }
+
+  ximage->data = SHMInfo.shmaddr;
+  SHMInfo.readOnly = FALSE;
+
+  if (XShmAttach (xcontext->disp, &SHMInfo) == 0) {
+    GST_WARNING ("Failed to XShmAttach");
+    /* Clean up the shared memory segment */
+    shmctl (SHMInfo.shmid, IPC_RMID, NULL);
+    goto beach;
+  }
+
+  /* Sync to ensure we see any errors we caused */
+  XSync (xcontext->disp, FALSE);
+
+  /* Delete the shared memory segment as soon as everyone is attached.
+   * This way, it will be deleted as soon as we detach later, and not
+   * leaked if we crash. */
+  shmctl (SHMInfo.shmid, IPC_RMID, NULL);
+
+  if (!error_caught) {
+    GST_DEBUG ("XServer ShmAttached to 0x%x, id 0x%lx", SHMInfo.shmid,
+        SHMInfo.shmseg);
+
+    did_attach = TRUE;
+    /* store whether we succeeded in result */
+    result = TRUE;
+  } else {
+    GST_WARNING ("MIT-SHM extension check failed at XShmAttach. "
+        "Not using shared memory.");
+  }
+
+beach:
+  /* Sync to ensure we swallow any errors we caused and reset error_caught */
+  XSync (xcontext->disp, FALSE);
+
+  error_caught = FALSE;
+  XSetErrorHandler (handler);
+
+  if (did_attach) {
+    GST_DEBUG ("XServer ShmDetaching from 0x%x id 0x%lx",
+        SHMInfo.shmid, SHMInfo.shmseg);
+    XShmDetach (xcontext->disp, &SHMInfo);
+    XSync (xcontext->disp, FALSE);
+  }
+  if (SHMInfo.shmaddr != ((void *) -1))
+    shmdt (SHMInfo.shmaddr);
+  if (ximage)
+    XDestroyImage (ximage);
+  return result;
+}
+#endif /* HAVE_XSHM */
