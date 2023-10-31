@@ -65,7 +65,6 @@ G_DEFINE_TYPE (GstXImageMemoryAllocator, ximage_memory_allocator,
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_ximage_memory_alloc
  * @brief: 暂时不知道为什么不使用该函数分配内存
  * @param allocator:
  * @param size: 
@@ -84,9 +83,9 @@ gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_ximage_memory_free
- * @brief: 仅仅释放GstXImageMemory结构体占用的内存，以及 XDestroyImage (mem->ximage);
- *         GstXImageMemory用户实际使用的内存并不在这里释放
+ * @brief: 1.仅仅释放GstXImageMemory结构体占用的内存
+ *         2.XDestroyImage (mem->ximage);
+ *           GstXImageMemory用户实际使用的内存并不在这里释放
  * @param allocator: 分配器地址
  * @param gmem: 本质是GstXImageMemory型对象
  * @return:
@@ -161,13 +160,13 @@ sub_mem:
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_memory_map
- * @brief: 
+ * @brief: 获取到真正用户需要的数据地址（在这里就是图像数据的实际地址）
  * @param mem: 
  * @param maxsize: 
  * @param flags: 
  * @return:
- * @note: GstAllocator *alloc->mem_map = (GstMemoryMapFunction) ximage_memory_map;
+ * @note:实例成员函数指针  mem_map
+ *       GstAllocator *alloc->mem_map = (GstMemoryMapFunction) ximage_memory_map;
  * *************************************************************************************************************************************************
 */
 static gpointer
@@ -178,11 +177,11 @@ ximage_memory_map (GstXImageMemory * mem, gsize maxsize, GstMapFlags flags)
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_memory_unmap
- * @brief: 
+ * @brief: 不清楚具体作用？？？？ 为什么只返回TRUE
  * @param mem: 
  * @return:
- * @note: GstAllocator *alloc->mem_unmap = (GstMemoryUnmapFunction) ximage_memory_unmap;
+ * @note:实例成员函数指针  mem_unmap 
+ *       GstAllocator *alloc->mem_unmap = (GstMemoryUnmapFunction) ximage_memory_unmap;
  * *************************************************************************************************************************************************
 */
 static gboolean
@@ -193,13 +192,13 @@ ximage_memory_unmap (GstXImageMemory * mem)
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_memory_share
- * @brief: 
+ * @brief: 暂时还没有了解具体用途！！！！
  * @param mem: 
  * @param offset: 
  * @param size: 
  * @return:
- * @note: GstAllocator *alloc->mem_share = (GstMemoryShareFunction) ximage_memory_share;
+ * @note: 实例成员函数指针  mem_share 
+ *        GstAllocator *alloc->mem_share = (GstMemoryShareFunction) ximage_memory_share;
  * *************************************************************************************************************************************************
 */
 static GstXImageMemory *
@@ -244,7 +243,6 @@ ximage_memory_share (GstXImageMemory * mem, gssize offset, gsize size)
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_memory_allocator_class_init
  * @brief: GstXImageMemoryAllocator类初始化函数
  * @param klass:
  * @return:
@@ -264,11 +262,10 @@ ximage_memory_allocator_class_init (GstXImageMemoryAllocatorClass * klass)
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_memory_allocator_init
  * @brief: GstXImageMemoryAllocator实例初始化函数
  * @param allocator: 
  * @return:
- * @note:
+ * @note: 
  * *************************************************************************************************************************************************
 */
 static void
@@ -297,10 +294,12 @@ G_DEFINE_TYPE (GstXImageBufferPool, gst_ximage_buffer_pool,
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
- * @brief: 
- * @param xpool: 
- * @return:
+ * @brief: X11窗口发生错误会被调用
+ * @param display:  
+ * @param xevent: 
+ * @return: 
+ * @calledby: ximage_memory_alloc
+ *            gst_x_image_sink_check_xshm_calls
  * @note:
  * *************************************************************************************************************************************************
 */
@@ -317,11 +316,10 @@ gst_ximagesink_handle_xerror (Display * display, XErrorEvent * xevent)
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_memory_alloc
- * @brief: 1.申请了GstXImageMemory结构体需要的内存
+ * @brief: 1.仅仅申请了GstXImageMemory结构体需要的内存 （用户需要的内存地址为mem->ximage->data）
  *         2.
  * @param xpool: 
- * @called_by: 被ximage_buffer_pool_alloc调用
+ * @called_by: 被ximage_buffer_pool_alloc调用 (它是GstXImageBufferPoolClass->alloc虚函数的实现)
  * @return:
  * @note:
  * *************************************************************************************************************************************************
@@ -335,14 +333,14 @@ ximage_memory_alloc (GstXImageBufferPool * xpool) {
   GstXContext *xcontext;
   gint width, height, align, offset;
   GstXImageMemory *mem;
-
+  
   ximagesink = xpool->sink;
   xcontext = ximagesink->xcontext;
 
   width = xpool->padded_width;
   height = xpool->padded_height;
 
-  /* 给GstXImageMemory对象申请了内存 */
+  /* 1.GstXImageMemory对象申请了内存 */
   mem = g_slice_new (GstXImageMemory);
 
 #ifdef HAVE_XSHM
@@ -360,7 +358,7 @@ ximage_memory_alloc (GstXImageBufferPool * xpool) {
 
   g_mutex_lock (&ximagesink->x_lock);
 
-  /* Setting an error handler to catch failure */
+  /* 设定一个错误处理者，捕获失败 */
   error_caught = FALSE;
   handler = XSetErrorHandler (gst_ximagesink_handle_xerror);
 
@@ -544,7 +542,6 @@ xattach_failed:
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
  * @brief: 
  * @param xpool: 
  * @return:
@@ -564,7 +561,6 @@ ximage_buffer_pool_get_options (GstBufferPool * pool)
 
 /**
  * *************************************************************************************************************************************************
- * @name: 
  * @brief: 
  * @param xpool: 
  * @return:
@@ -663,8 +659,12 @@ wrong_caps:
 
 /**
  * *************************************************************************************************************************************************
- * @name: ximage_buffer_pool_alloc
- * @brief: gstbufferpool_class->alloc_buffer = ximage_buffer_pool_alloc
+ * @brief:   GstXImageBufferClass->alloc虚函数实现
+ *           gstbufferpool_class->alloc_buffer = ximage_buffer_pool_alloc
+ *         
+ *         1.创建了一个GstBuffer对象 ximage = gst_buffer_new ();
+ *         2.申请了GstMemory对象内存（仅仅GstMemory对象），用户实际使用的data并没申请，调用ximage_memory_alloc(xpool)
+ *         3.如果需要添加视频格式、宽度、高度等数据到GstBuffer， gst_buffer_add_video_meta_full
  * @param xpool: 
  * @param buffer: 
  * @param params: 
@@ -674,8 +674,7 @@ wrong_caps:
 */
 static GstFlowReturn
 ximage_buffer_pool_alloc (GstBufferPool * pool, GstBuffer ** buffer,
-    GstBufferPoolAcquireParams * params)
-{
+    GstBufferPoolAcquireParams * params) {
   GstXImageBufferPool *xpool = GST_XIMAGE_BUFFER_POOL_CAST (pool);
   GstVideoInfo *info;
   GstBuffer *ximage;
@@ -683,14 +682,18 @@ ximage_buffer_pool_alloc (GstBufferPool * pool, GstBuffer ** buffer,
 
   info = &xpool->info;
 
+  /* 1.创建了一个GstBuffer对象 */
   ximage = gst_buffer_new ();
+  /* 2.申请结构体GstXImageMemory内存 */
   mem = ximage_memory_alloc (xpool);
   if (mem == NULL) {
     gst_buffer_unref (ximage);
     goto no_buffer;
   }
+  /* 上一步申请的GstXImageMemory添加到GstBuffer */
   gst_buffer_append_memory (ximage, mem);
 
+  /* 3.添加视频格式、宽度、高度等数据到GstBuffer */
   if (xpool->add_metavideo) {
     GstVideoMeta *meta;
 
@@ -717,7 +720,6 @@ no_buffer:
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_ximage_buffer_pool_finalize
  * @brief: 
  * @param xpool: 
  * @return:
@@ -742,11 +744,13 @@ gst_ximage_buffer_pool_finalize (GObject * object)
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_ximage_buffer_pool_class_init
  * @brief: 
  * @param xpool: 
  * @return:
- * @note:
+ * @note: 1.gobject_class->finalize = gst_ximage_buffer_pool_finalize
+ *        2.gstbufferpool_class->get_options = ximage_buffer_pool_get_options;
+ *        3.gstbufferpool_class->set_config = ximage_buffer_pool_set_config;
+ *        4.gstbufferpool_class->alloc_buffer = ximage_buffer_pool_alloc;
  * *************************************************************************************************************************************************
 */
 static void
@@ -764,7 +768,6 @@ gst_ximage_buffer_pool_class_init (GstXImageBufferPoolClass * klass)
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_ximage_buffer_pool_init
  * @brief: 
  * @param xpool: 
  * @return:
@@ -780,7 +783,6 @@ gst_ximage_buffer_pool_init (GstXImageBufferPool * pool)
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_ximage_buffer_pool_new
  * @brief: 
  * @param xpool: 
  * @return:
@@ -808,7 +810,6 @@ gst_ximage_buffer_pool_new (GstXImageSink * ximagesink)
 
 /**
  * *************************************************************************************************************************************************
- * @name: gst_x_image_sink_check_xshm_calls
  * @brief: 
  * @param xpool: 
  * @return:
