@@ -62,10 +62,10 @@ struct _GstXImageMemory
   /* Reference to the ximagesink we belong to */
   GstXImageSink *sink;
 
-  XImage *ximage;
+  XImage *ximage; /* X图片信息指针 */
 
 #ifdef HAVE_XSHM
-  XShmSegmentInfo SHMInfo;
+  XShmSegmentInfo SHMInfo; /* 共享内存段信息 */
 #endif                          /* HAVE_XSHM */
 
   gint x, y;

@@ -76,8 +76,7 @@ G_DEFINE_TYPE (GstXImageMemoryAllocator, ximage_memory_allocator,
 */
 static GstMemory *
 gst_ximage_memory_alloc (GstAllocator * allocator, gsize size,
-    GstAllocationParams * params)
-{
+    GstAllocationParams * params) {
   return NULL;
 }
 

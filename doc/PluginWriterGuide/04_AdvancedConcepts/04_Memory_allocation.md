@@ -1,4 +1,4 @@
-# 4 Memory allocation
+# 四、 Memory allocation
 
 内存分配和管理是多媒体领域中非常重要的主题。高清晰度视频需要大量兆字节来存储单个图像帧。在可能的情况下，重复使用内存非常重要，而不是不断地分配和释放内存。
 
@@ -7,6 +7,44 @@
 本章讨论了GStreamer插件可用的内存管理功能。首先，我们将讨论低级别的GstMemory对象，它管理对一块内存的访问，然后继续讨论它的主要用户之一，GstBuffer，它用于在元素之间以及与应用程序之间交换数据。我们还将讨论GstMeta。这个对象可以放置在缓冲区上，以提供有关它们及其内存的额外信息。我们还将讨论GstBufferPool，它允许更高效地管理相同大小的缓冲区。
 
 最后，我们将看一看GST_QUERY_ALLOCATION查询，该查询用于在元素之间协商内存管理选项。
+
+
+- [1 gstmemory](#1-gstmemory)
+
+   - [1.1 gstallocator](#11-gstallocator)
+
+   - [1.2 gstmemory-api-example](#12-gstmemory-api-example)
+
+   - [1.3 implementing-a-gstallocator](#13-implementing-a-gstallocator)
+
+- [2 gstbuffer](#2-gstbuffer)
+
+   - [2.1 writability](#21-writability)
+
+   - [2.2 api-examples](#22-api-examples)
+
+- [3 gstmeta](#3-gstmeta)
+
+   - [3.1 writability](#31-api-example)
+
+   - [3.2 分析gstvideocropmeta](#32-分析gstvideocropmeta)
+
+   - [3.3 implementing-new-gstmeta](#33-implementing-new-gstmeta)
+
+- [4 gstbufferpool](#4-gstbufferpool)
+
+  - [4.1 api-example](#41-api-example)
+
+  - [4.2 implementing-a-new-gstbufferpool](#42-implementing-a-new-gstbufferpool)
+
+- [5 gst_query_allocation](#5-gst_query_allocation)
+
+  - [5.1 allocation-query-example](#51-allocation-query-example)
+
+  - [5.2 the-allocation-query-in-base-classes](#52-the-allocation-query-in-base-classes)
+
+  - [5.3 negotiating-the-exact-layout-of-video-buffers](#53-negotiating-the-exact-layout-of-video-buffers)
+
 
 ## 1 GstMemory
 
