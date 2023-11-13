@@ -46,15 +46,23 @@ print_config_structure(GQuark   field_id,
 int
 main (int argc, char *argv[]) {
 
+  g_print ("GstMemory GType = %ld\n", GST_TYPE_MEMORY);
+  g_print ("GST_TYPE_MINI_OBJECT GType = %ld\n", GST_TYPE_MINI_OBJECT);
+
   gst_init (&argc, &argv);
+
+  g_print ("GstMemory GType = %ld\n", GST_TYPE_MEMORY);
+  g_print ("GST_TYPE_MINI_OBJECT GType = %ld\n", GST_TYPE_MINI_OBJECT);
 
   GstMemory *mem1, *mem2;
   GstMapInfo info;
   gint i;
-
+  
   /* 参数allocator = NULL将使用默认的分配器 */
   mem1 = gst_allocator_alloc (NULL, 100, NULL);
   mem2 = gst_allocator_alloc (NULL, 50, NULL);
+
+  g_print ("GstMemory GType = %ld\n", mem1->mini_object.type);
 
   g_print ("Memory type: %s\n", mem1->allocator->mem_type);
 
