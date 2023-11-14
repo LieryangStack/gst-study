@@ -20,38 +20,28 @@ gst_mini_object_ref 和 gst_mini_object_unref 分别用于增加和减少引用�
 
 ## 继承于GstMiniObject类的轻量级对象
 
-#### GstBuffer
-- **作用**: 表示流水线中单个媒体数据块。用于传输原始数据（如音频样本或视频帧）。
+- **GstBuffer**: 表示流水线中单个媒体数据块。用于传输原始数据（如音频样本或视频帧）。
 
-#### GstBufferList
-- **作用**: 管理 `GstBuffer` 对象的集合，适用于需要批量处理或优化传输的情况。
+- **GstBufferList**: 管理 `GstBuffer` 对象的集合，适用于需要批量处理或优化传输的情况。
 
-#### GstMessage
-- **作用**: 在 GStreamer 应用程序和元素之间传递异步消息，包括错误、状态变更、流结束通知等。
+- **GstMessage**: 在 GStreamer 应用程序和元素之间传递异步消息，包括错误、状态变更、流结束通知等。
 
-#### GstMemory
-- **作用**: 表示 `GstBuffer` 数据的内存块，抽象了数据可以存储在的不同类型的内存。
+- **GstMemory**: 表示 `GstBuffer` 数据的内存块，抽象了数据可以存储在的不同类型的内存。
 
-#### GstCaps
-- **作用**: 描述媒体数据的格式和属性，指定流水线元素可以处理或产生的媒体类型。
+- **GstCaps**: 描述媒体数据的格式和属性，指定流水线元素可以处理或产生的媒体类型。
 
-#### GstEvent
-- **作用**: 在流水线元素之间传递控制事件，如流开始、配置更改、跳到新的时间点等。
+- **GstEvent**: 在流水线元素之间传递控制事件，如流开始、配置更改、跳到新的时间点等。
 
-#### GstContext
-- **作用**: 在元素之间共享高层次信息，如设备句柄或平台特定数据。
+- **GstContext**: 在元素之间共享高层次信息，如设备句柄或平台特定数据。
 
-#### GstSample
-- **作用**: 包含 `GstBuffer`、`GstCaps` 和时间戳，通常用于表示处理后的单个数据样本。
+- **GstSample**: 包含 `GstBuffer`、`GstCaps` 和时间戳，通常用于表示处理后的单个数据样本。
 
-#### GstQuery
-- **作用**: 查询流水线或其元素的状态，如持续时间、位置、格式、带宽等。
+- **GstQuery**: 查询流水线或其元素的状态，如持续时间、位置、格式、带宽等。
 
-#### GstDateTime
-- **作用**: 表示和处理日期和时间数据，用于处理时间相关的元数据或时间戳。
+- **GstDateTime**: 表示和处理日期和时间数据，用于处理时间相关的元数据或时间戳。
 
 
-## GstMiniObject结构体成员
+## GstMiniObject 结构体成员
 
 ```c
 struct _GstMiniObject {
@@ -71,4 +61,71 @@ struct _GstMiniObject {
   guint priv_uint;
   gpointer priv_pointer;
 };
+```
+
+## GstMiniObject 类型的定义与注册
+
+```c
+/* filename:gstminiobject.h */
+
+/* _gst_mini_object_type 是在类型系统中注册的类型值，该值由源文件定义，gst_init进行注册 */
+extern unsigned long _gst_mini_object_type;
+#define GST_TYPE_MINI_OBJECT (_gst_mini_object_type)
+
+#define GST_DEFINE_MINI_OBJECT_TYPE(TypeName,type_name) \
+   G_DEFINE_BOXED_TYPE(TypeName,type_name,              \
+       (GBoxedCopyFunc) gst_mini_object_ref,            \
+       (GBoxedFreeFunc) gst_mini_object_unref)
+
+/* 注册该类型调用的函数 */
+extern           gst_mini_object_get_type   (void);
+```
+
+```c
+/* filename: gstminiobject.c */
+
+/* GstMiniObject类型值定义 */
+unsigned long _gst_mini_object_type = 0;
+
+/* gst_mini_object_get_type函数定义 
+ * G_DEFINE_BOXED_TYPE 拷贝和释放使用的ref和unref函数指针
+ */
+GST_DEFINE_MINI_OBJECT_TYPE (GstMiniObject, gst_mini_object);
+
+/* 注册GstMiniObject类型，该函数由gst_init调用 */
+void
+_priv_gst_mini_object_initialize (void)
+{
+  _gst_mini_object_type = gst_mini_object_get_type ();
+  weak_ref_quark = g_quark_from_static_string ("GstMiniObjectWeakRefQuark");
+}
+
+```
+
+## gstminiobject.c 定义函数分析
+
+### gst_mini_object_init
+
+该初始化函数仅仅就是把输入参数赋值给GstMiniObject结构体
+
+```c
+void
+gst_mini_object_init (GstMiniObject * mini_object, guint flags, GType type,
+    GstMiniObjectCopyFunction copy_func,
+    GstMiniObjectDisposeFunction dispose_func,
+    GstMiniObjectFreeFunction free_func)
+```
+
+### gst_mini_object_copy
+
+```c
+GstMiniObject *
+gst_mini_object_copy (const GstMiniObject * mini_object) {
+
+  ...
+
+  GstMiniObject *copy = mini_object->copy (mini_object);
+
+  ...
+}
 ```
