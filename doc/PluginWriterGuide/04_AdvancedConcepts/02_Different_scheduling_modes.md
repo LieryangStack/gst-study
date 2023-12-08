@@ -213,7 +213,7 @@ gst_my_filter_activate_pull (GstPad    * pad,
 
 ## Providing random access
 
-在上一节中，我们讨论了激活元素(或pad)以使用它们自己的任务驱动管道时，必须在它们的sinpad上使用拉模式调度。这意味着所有连接到这些焊盘的焊盘都需要在拉模式下激活。以pull模式激活的源pad必须使用gst_pad_set_getrange_function()实现一个_get_range()函数集，当对端pad使用gst_pad_pull_range()请求一些数据时，将调用该函数。元素负责寻找正确的偏移量，并提供所请求的数据。有几个元素可以实现随机访问:
+在上一节中，我们讨论了激活元素(或pad)以使用它们自己的任务驱动管道时，必须在它们的sinpad上使用拉模式调度。这意味着所有连接到这些Pad的Pad都需要在拉模式下激活。以pull模式激活的src pad必须使用gst_pad_set_getrange_function()实现一个_get_range()函数集，当对端pad使用gst_pad_pull_range()请求一些数据时，将调用该函数。元素负责寻找正确的偏移量，并提供所请求的数据。有几个元素可以实现随机访问:
 
  - 数据源，如文件源，可以以合理的低延迟提供任何偏移量的数据。
  - 希望在整个管道上提供拉模式调度的过滤器。
